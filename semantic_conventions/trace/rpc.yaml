@@ -24,8 +24,7 @@ groups:
               brief: 'Apache Dubbo'
       - id: service
         type: string
-        required:
-          conditional: "No, but recommended"
+        required: recommended
         brief: 'The full (logical) name of the service being called, including its package name, if applicable.'
         note: >
           This is the logical name of the service from the RPC interface perspective,
@@ -37,8 +36,7 @@ groups:
         examples: "myservice.EchoService"
       - id: method
         type: string
-        required:
-          conditional: "No, but recommended"
+        required: recommended
         brief: 'The name of the (logical) method being called, must be equal to the $method part in the span name.'
         note: >
           This is the logical name of the method from the RPC interface perspective,

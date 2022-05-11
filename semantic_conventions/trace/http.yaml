@@ -112,7 +112,7 @@ groups:
         brief: >
           The ordinal number of request re-sending attempt.
         required:
-          conditional: If and only if a request was retried.
+          recommended: If and only if a request was retried.
         examples: 3
       - ref: net.peer.ip
         sampling_relevant: true
