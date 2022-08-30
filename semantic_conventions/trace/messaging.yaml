@@ -89,7 +89,7 @@ groups:
         requirement_level:
           recommended: only if batch_size is not set or set to `1`.
       - ref: messaging.message.conversation_id
-        requirement_level:level
+        requirement_level:
           recommended: only if batch_size is not set or set to `1`.
       - ref: messaging.message.payload_size_bytes
         requirement_level:

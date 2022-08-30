@@ -153,7 +153,7 @@ Following messaging attributes apply to spans describing `send`, `receive`, and 
 
 **[2]:** If value is `true`. When missing, the value is assumed to be `false`.
 
-**[3]:** Instrumentations SHOULD always set `batch_size`on batch `receive` operations even when one message it received to  distinguish it from the case when no messages were received.
+**[3]:** Instrumentations SHOULD always set `batch_size`on batch `receive` operations even when one message it received to distinguish it from the case when no messages were received.
 
 **[4]:** If available and only if the span describes operations that operate with message batches. It SHOULD NOT be set when operation does not support batching.
 
@@ -240,7 +240,7 @@ For Apache Kafka, the following additional attributes are defined:
 <!-- semconv messaging.kafka -->
 | Attribute  | Type | Description  | Examples  | Requirement Level |
 |---|---|---|---|---|
-| `messaging.kafka.message_key` | string | Message keys in Kafka are used for grouping alike messages to ensure they're processed on the same partition. They differ from `messaging.message.id` in that they're not unique. If the key is `null`, the attribute MUST NOT be set. [1] | `myKey` | Recommended |
+| `messaging.kafka.message_key` | string | Message keys in Kafka are used for grouping alike messages to ensure they're processed on the same partition. They differ from `messaging.message_id` in that they're not unique. If the key is `null`, the attribute MUST NOT be set. [1] | `myKey` | Recommended |
 | `messaging.kafka.consumer_group` | string | Name of the Kafka Consumer Group that is handling the message. Only applies to consumers, not producers. | `my-group` | Recommended |
 | `messaging.kafka.client_id` | string | Client Id for the Consumer or Producer that is handling the message. | `client-5` | Recommended |
 | `messaging.kafka.partition` | int | Partition the message is sent to. | `2` | Recommended |
