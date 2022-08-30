@@ -241,7 +241,7 @@ For Apache Kafka, the following additional attributes are defined:
 <!-- semconv messaging.kafka -->
 | Attribute  | Type | Description  | Examples  | Requirement Level |
 |---|---|---|---|---|
-| `messaging.kafka.message_key` | string | Message keys in Kafka are used for grouping alike messages to ensure they're processed on the same partition. They differ from `messaging.message_id` in that they're not unique. If the key is `null`, the attribute MUST NOT be set. [1] | `myKey` | Recommended |
+| `messaging.kafka.message_key` | string | Message keys in Kafka are used for grouping alike messages to ensure they're processed on the same partition. They differ from `messaging.message.id` in that they're not unique. If the key is `null`, the attribute MUST NOT be set. [1] | `myKey` | Recommended |
 | `messaging.kafka.consumer_group` | string | Name of the Kafka Consumer Group that is handling the message. Only applies to consumers, not producers. | `my-group` | Recommended |
 | `messaging.kafka.client_id` | string | Client Id for the Consumer or Producer that is handling the message. | `client-5` | Recommended |
 | `messaging.kafka.partition` | int | Partition the message is sent to. | `2` | Recommended |
@@ -315,7 +315,7 @@ Process CB:                 | Span CB1 |
 | `messaging.destination` | `"T"` | `"T"` | `"T"` |
 | `messaging.destination_kind` | `"topic"` | `"topic"` | `"topic"` |
 | `messaging.operation` |  | `"process"` | `"process"` |
-| `messaging.message_id` | `"a1"` | `"a1"`| `"a1"` |
+| `messaging.message.id` | `"a1"` | `"a1"`| `"a1"` |
 
 ### Apache Kafka with Quarkus or Spring Boot Example
 
@@ -382,14 +382,14 @@ Process C:                      | Span Recv1 |
 | `messaging.destination` | `"Q"` | `"Q"` | `"Q"` | `"Q"` | `"Q"` |
 | `messaging.destination_kind` | `"queue"` | `"queue"` | `"queue"` | `"queue"` | `"queue"` |
 | `messaging.operation` |  |  | `"receive"` | `"process"` | `"process"` |
-| `messaging.message_id` | `"a1"` | `"a2"` | | `"a1"` | `"a2"` |
+| `messaging.message.id` | `"a1"` | `"a2"` | | `"a1"` | `"a2"` |
+| `messaging.batch_size` |  |  | 2 |  |  |
 
 ### Batch processing
 
 Given is a process P, that sends two messages to a queue Q on messaging system MS, and a process C, which receives both of them separately (Span Recv1 and Recv2) and processes both messages in one batch (Span Proc1).
 
 Since each span can only have one parent, C3 should not choose a random parent out of C1 and C2, but rather rely on the implicitly selected parent as defined by the [tracing API spec](../api.md).
-Similarly, only one value can be set as `message_id`, so C3 cannot report both `a1` and `a2` and therefore attribute is left out.
 Depending on the implementation, the producing spans might still be available in the meta data of the messages and should be added to C3 as links.
 The client library or application could also add the receiver span's SpanContext to the data structure it returns for each message. In this case, C3 could also add links to the receiver spans C1 and C2.
 
@@ -406,7 +406,9 @@ Process C:                              | Span Recv1 | Span Recv2 |
 |-|-|-|-|-|-|
 | Span name | `"Q send"` | `"Q send"` | `"Q receive"` | `"Q receive"` | `"Q process"` |
 | Parent |  |  | Span Prod1 | Span Prod2 |  |
-| Links |  |  |  |  | Span Prod1 + Prod2 |
+| Links |  |  |  |  | [Span Prod1, Span Prod2 ] |
+| Link attributes |  |  |  |  | Span Prod1: `messaging.message.id`: `"a1"`  |
+|                 |  |  |  |  | Span Prod2: `messaging.message.id`: `"a2"`  |
 | SpanKind | `PRODUCER` | `PRODUCER` | `CONSUMER` | `CONSUMER` | `CONSUMER` |
 | Status | `Ok` | `Ok` | `Ok` | `Ok` | `Ok` |
 | `net.peer.name` | `"ms"` | `"ms"` | `"ms"` | `"ms"` | `"ms"` |
@@ -415,4 +417,5 @@ Process C:                              | Span Recv1 | Span Recv2 |
 | `messaging.destination` | `"Q"` | `"Q"` | `"Q"` | `"Q"` | `"Q"` |
 | `messaging.destination_kind` | `"queue"` | `"queue"` | `"queue"` | `"queue"` | `"queue"` |
 | `messaging.operation` |  |  | `"receive"` | `"receive"` | `"process"` |
-| `messaging.message_id` | `"a1"` | `"a2"` | `"a1"` | `"a2"` | |
+| `messaging.message.id` | `"a1"` | `"a2"` | `"a1"` | `"a2"` | |
+| `messaging.batch_size` | | | 1 | 1 | 2 |
