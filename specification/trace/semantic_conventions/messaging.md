@@ -6,27 +6,26 @@
 
 <!-- toc -->
 
-- [Messaging systems](#messaging-systems)
-  - [Definitions](#definitions)
-    - [Destinations](#destinations)
-    - [Message consumption](#message-consumption)
-    - [Conversations](#conversations)
-    - [Temporary destinations](#temporary-destinations)
-  - [Conventions](#conventions)
-    - [Span name](#span-name)
-    - [Span kind](#span-kind)
-    - [Operation names](#operation-names)
-  - [Messaging attributes](#messaging-attributes)
+- [Definitions](#definitions)
+  - [Destinations](#destinations)
+  - [Message consumption](#message-consumption)
+  - [Conversations](#conversations)
+  - [Temporary destinations](#temporary-destinations)
+- [Conventions](#conventions)
+  - [Span name](#span-name)
+  - [Span kind](#span-kind)
+  - [Operation names](#operation-names)
+- [Messaging attributes](#messaging-attributes)
   - [Per-message attributes](#per-message-attributes)
-    - [Attributes specific to certain messaging systems](#attributes-specific-to-certain-messaging-systems)
-      - [RabbitMQ](#rabbitmq)
-      - [Apache Kafka](#apache-kafka)
-      - [Apache RocketMQ](#apache-rocketmq)
-  - [Examples](#examples)
-    - [Topic with multiple consumers](#topic-with-multiple-consumers)
-    - [Apache Kafka with Quarkus or Spring Boot Example](#apache-kafka-with-quarkus-or-spring-boot-example)
-    - [Batch receiving](#batch-receiving)
-    - [Batch processing](#batch-processing)
+  - [Attributes specific to certain messaging systems](#attributes-specific-to-certain-messaging-systems)
+    - [RabbitMQ](#rabbitmq)
+    - [Apache Kafka](#apache-kafka)
+    - [Apache RocketMQ](#apache-rocketmq)
+- [Examples](#examples)
+  - [Topic with multiple consumers](#topic-with-multiple-consumers)
+  - [Apache Kafka with Quarkus or Spring Boot Example](#apache-kafka-with-quarkus-or-spring-boot-example)
+  - [Batch receiving](#batch-receiving)
+  - [Batch processing](#batch-processing)
 
 <!-- tocstop -->
 
@@ -205,7 +204,7 @@ For batch receiving and processing (see the [Batch receiving](#batch-receiving) 
 Even though in that case one might think that the processing span's kind should be `INTERNAL`, that kind MUST NOT be used.
 Instead span kind should be set to either `CONSUMER` or `SERVER` according to the rules defined above.
 
-## Per-message attributes
+### Per-message attributes
 
 Note that each or messaging operations (`send`, `receive`, or `process`) can describe a batch of messages. For batch operations per-message attributes cannot be set on
 corresponding span and SHOULD instead be set on link. See [Batch Receiving](#batch-receiving) and [Batch Processing](#batch-processing) for more information on correlation using links.

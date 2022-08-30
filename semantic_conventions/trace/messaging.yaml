@@ -77,19 +77,19 @@ groups:
       - id: batch_size
         type: int
         brief: Number of messages sent, received, or processed in scope of this operation.
-        requirement_level: 
+        requirement_level:
           conditionally_required: >
             If available and only if the span describes operations that operate with message batches. It SHOULD NOT be set when
             operation does not support batching.
-        note: > 
-            Instrumentations SHOULD always set `batch_size`on batch `receive` operations even when one message it received to 
+        note: >
+            Instrumentations SHOULD always set `batch_size`on batch `receive` operations even when one message it received to
             distinguish it from the case when no messages were received.
         examples: 2
       - ref: messaging.message.id
         requirement_level:
           recommended: only if batch_size is not set or set to `1`.
       - ref: messaging.message.conversation_id
-        requirement_level:
+        requirement_level:level
           recommended: only if batch_size is not set or set to `1`.
       - ref: messaging.message.payload_size_bytes
         requirement_level:

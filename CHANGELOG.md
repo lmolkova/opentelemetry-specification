@@ -73,7 +73,7 @@ release.
   ([#2675](https://github.com/open-telemetry/opentelemetry-specification/pull/2675))
 - Add OpenSearch to db.system semantic conventions
   ([#2718](https://github.com/open-telemetry/opentelemetry-specification/pull/2718)).
-- BREAKING: rename `messaging.message_id` to `messaging.message.id`, 
+- BREAKING: rename `messaging.message_id` to `messaging.message.id`,
   `messaging.conversation_id` to `messaging.message.conversation_id`,
   `messaging.message_payload_size_bytes` to `messaging.message.payload_size_bytes`,
   `messaging.message_payload_compressed_size_bytes` to `messaging.message.payload_compressed_size_bytes`.
