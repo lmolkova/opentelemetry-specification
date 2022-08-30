@@ -86,7 +86,17 @@ groups:
             distinguish it from the case when no messages were received.
         examples: 2
       - ref: messaging.message.id
+        requirement_level:
+          recommended: only if batch_size is not set or set to `1`.
       - ref: messaging.message.conversation_id
+        requirement_level:
+          recommended: only if batch_size is not set or set to `1`.
+      - ref: messaging.message.payload_size_bytes
+        requirement_level:
+          recommended: only if batch_size is not set or set to `1`.
+      - ref: messaging.message.payload_compressed_size_bytes
+        requirement_level:
+          recommended: only if batch_size is not set or set to `1`.
       - ref: net.peer.name
         note: >
           This should be the IP/hostname of the broker (or other network-level peer) this specific message is sent to/received from.

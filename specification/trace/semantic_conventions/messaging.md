@@ -6,25 +6,27 @@
 
 <!-- toc -->
 
-- [Definitions](#definitions)
-  * [Destinations](#destinations)
-  * [Message consumption](#message-consumption)
-  * [Conversations](#conversations)
-  * [Temporary destinations](#temporary-destinations)
-- [Conventions](#conventions)
-  * [Span name](#span-name)
-  * [Span kind](#span-kind)
-  * [Operation names](#operation-names)
-- [Messaging attributes](#messaging-attributes)
-  * [Attributes specific to certain messaging systems](#attributes-specific-to-certain-messaging-systems)
-    + [RabbitMQ](#rabbitmq)
-    + [Apache Kafka](#apache-kafka)
-    + [Apache RocketMQ](#apache-rocketmq)
-- [Examples](#examples)
-  * [Topic with multiple consumers](#topic-with-multiple-consumers)
-  * [Apache Kafka with Quarkus or Spring Boot Example](#apache-kafka-with-quarkus-or-spring-boot-example)
-  * [Batch receiving](#batch-receiving)
-  * [Batch processing](#batch-processing)
+- [Messaging systems](#messaging-systems)
+  - [Definitions](#definitions)
+    - [Destinations](#destinations)
+    - [Message consumption](#message-consumption)
+    - [Conversations](#conversations)
+    - [Temporary destinations](#temporary-destinations)
+  - [Conventions](#conventions)
+    - [Span name](#span-name)
+    - [Span kind](#span-kind)
+    - [Operation names](#operation-names)
+  - [Messaging attributes](#messaging-attributes)
+  - [Per-message attributes](#per-message-attributes)
+    - [Attributes specific to certain messaging systems](#attributes-specific-to-certain-messaging-systems)
+      - [RabbitMQ](#rabbitmq)
+      - [Apache Kafka](#apache-kafka)
+      - [Apache RocketMQ](#apache-rocketmq)
+  - [Examples](#examples)
+    - [Topic with multiple consumers](#topic-with-multiple-consumers)
+    - [Apache Kafka with Quarkus or Spring Boot Example](#apache-kafka-with-quarkus-or-spring-boot-example)
+    - [Batch receiving](#batch-receiving)
+    - [Batch processing](#batch-processing)
 
 <!-- tocstop -->
 
@@ -125,6 +127,8 @@ The following operations related to messages are defined for these semantic conv
 
 ## Messaging attributes
 
+Following messaging attributes apply to spans describing `send`, `receive`, and `process`  operations.
+
 <!-- semconv messaging -->
 | Attribute  | Type | Description  | Examples  | Requirement Level |
 |---|---|---|---|---|
@@ -135,27 +139,32 @@ The following operations related to messages are defined for these semantic conv
 | `messaging.protocol` | string | The name of the transport protocol. | `AMQP`; `MQTT` | Recommended |
 | `messaging.protocol_version` | string | The version of the transport protocol. | `0.9.1` | Recommended |
 | `messaging.url` | string | Connection string. | `tibjmsnaming://localhost:7222`; `https://queue.amazonaws.com/80398EXAMPLE/MyQueue` | Recommended |
-| `messaging.message_id` | string | A value used by the messaging system as an identifier for the message, represented as a string. | `452a7c7c7c7048c2f887f61572b18fc2` | Recommended |
-| `messaging.conversation_id` | string | The [conversation ID](#conversations) identifying the conversation to which the message belongs, represented as a string. Sometimes called "Correlation ID". | `MyConversationId` | Recommended |
-| `messaging.message_payload_size_bytes` | int | The (uncompressed) size of the message payload in bytes. Also use this attribute if it is unknown whether the compressed or uncompressed payload size is reported. | `2738` | Recommended |
-| `messaging.message_payload_compressed_size_bytes` | int | The compressed size of the message payload in bytes. | `2048` | Recommended |
-| [`net.peer.name`](span-general.md) | string | Logical remote hostname, see note below. [3] | `example.com` | Conditionally Required: If available. |
-| [`net.sock.family`](span-general.md) | string | Protocol [address family](https://man7.org/linux/man-pages/man7/address_families.7.html) which is used for communication. | `inet6`; `bluetooth` | Conditionally Required: [4] |
+| `messaging.batch_size` | int | Number of messages sent, received, or processed in scope of this operation. [3] | `2` | Conditionally Required: [4] |
+| `messaging.message.conversation_id` | string | The [conversation ID](#conversations) identifying the conversation to which the message belongs, represented as a string. Sometimes called "Correlation ID". | `MyConversationId` | Recommended: only if batch_size is not set or set to `1`. |
+| `messaging.message.id` | string | A value used by the messaging system as an identifier for the message, represented as a string. | `452a7c7c7c7048c2f887f61572b18fc2` | Recommended: only if batch_size is not set or set to `1`. |
+| `messaging.message.payload_compressed_size_bytes` | int | The compressed size of the message payload in bytes. | `2048` | Recommended: only if batch_size is not set or set to `1`. |
+| `messaging.message.payload_size_bytes` | int | The (uncompressed) size of the message payload in bytes. Also use this attribute if it is unknown whether the compressed or uncompressed payload size is reported. | `2738` | Recommended: only if batch_size is not set or set to `1`. |
+| [`net.peer.name`](span-general.md) | string | Logical remote hostname, see note below. [5] | `example.com` | Conditionally Required: If available. |
+| [`net.sock.family`](span-general.md) | string | Protocol [address family](https://man7.org/linux/man-pages/man7/address_families.7.html) which is used for communication. | `inet6`; `bluetooth` | Conditionally Required: [6] |
 | [`net.sock.peer.addr`](span-general.md) | string | Remote socket peer address: IPv4 or IPv6 for internet protocols, path for local communication, [etc](https://man7.org/linux/man-pages/man7/address_families.7.html). | `127.0.0.1`; `/tmp/mysql.sock` | Recommended |
-| [`net.sock.peer.name`](span-general.md) | string | Remote socket peer name. | `proxy.example.com` | Recommended: [5] |
-| [`net.sock.peer.port`](span-general.md) | int | Remote socket peer port. | `16456` | Recommended: [6] |
+| [`net.sock.peer.name`](span-general.md) | string | Remote socket peer name. | `proxy.example.com` | Recommended: [7] |
+| [`net.sock.peer.port`](span-general.md) | int | Remote socket peer port. | `16456` | Recommended: [8] |
 
 **[1]:** If the message destination is either a `queue` or `topic`.
 
 **[2]:** If value is `true`. When missing, the value is assumed to be `false`.
 
-**[3]:** This should be the IP/hostname of the broker (or other network-level peer) this specific message is sent to/received from.
+**[3]:** Instrumentations SHOULD always set `batch_size`on batch `receive` operations even when one message it received to  distinguish it from the case when no messages were received.
 
-**[4]:** If different than `inet` and if any of `net.sock.peer.addr` or `net.sock.host.addr` are set. Consumers of telemetry SHOULD accept both IPv4 and IPv6 formats for the address in `net.sock.peer.addr` if `net.sock.family` is not set. This is to support instrumentations that follow previous versions of this document.
+**[4]:** If available and only if the span describes operations that operate with message batches. It SHOULD NOT be set when operation does not support batching.
 
-**[5]:** If different than `net.peer.name` and if `net.sock.peer.addr` is set.
+**[5]:** This should be the IP/hostname of the broker (or other network-level peer) this specific message is sent to/received from.
 
-**[6]:** If defined for the address family and if different than `net.peer.port` and if `net.sock.peer.addr` is set.
+**[6]:** If different than `inet` and if any of `net.sock.peer.addr` or `net.sock.host.addr` are set. Consumers of telemetry SHOULD accept both IPv4 and IPv6 formats for the address in `net.sock.peer.addr` if `net.sock.family` is not set. This is to support instrumentations that follow previous versions of this document.
+
+**[7]:** If different than `net.peer.name` and if `net.sock.peer.addr` is set.
+
+**[8]:** If defined for the address family and if different than `net.peer.port` and if `net.sock.peer.addr` is set.
 
 `messaging.destination_kind` MUST be one of the following:
 
@@ -195,6 +204,22 @@ The distinction between receiving and processing of messages is not always of pa
 For batch receiving and processing (see the [Batch receiving](#batch-receiving) and [Batch processing](#batch-processing) examples below) in particular, the attribute SHOULD be set.
 Even though in that case one might think that the processing span's kind should be `INTERNAL`, that kind MUST NOT be used.
 Instead span kind should be set to either `CONSUMER` or `SERVER` according to the rules defined above.
+
+## Per-message attributes
+
+Note that each or messaging operations (`send`, `receive`, or `process`) can describe a batch of messages. For batch operations per-message attributes cannot be set on
+corresponding span and SHOULD instead be set on link. See [Batch Receiving](#batch-receiving) and [Batch Processing](#batch-processing) for more information on correlation using links.
+
+Following attributes apply to links describing each message.
+
+<!-- semconv messaging.message -->
+| Attribute  | Type | Description  | Examples  | Requirement Level |
+|---|---|---|---|---|
+| `messaging.message.id` | string | A value used by the messaging system as an identifier for the message, represented as a string. | `452a7c7c7c7048c2f887f61572b18fc2` | Recommended |
+| `messaging.message.conversation_id` | string | The [conversation ID](#conversations) identifying the conversation to which the message belongs, represented as a string. Sometimes called "Correlation ID". | `MyConversationId` | Recommended |
+| `messaging.message.payload_size_bytes` | int | The (uncompressed) size of the message payload in bytes. Also use this attribute if it is unknown whether the compressed or uncompressed payload size is reported. | `2738` | Recommended |
+| `messaging.message.payload_compressed_size_bytes` | int | The compressed size of the message payload in bytes. | `2048` | Recommended |
+<!-- endsemconv -->
 
 ### Attributes specific to certain messaging systems
 
