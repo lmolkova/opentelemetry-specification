@@ -78,7 +78,7 @@ release.
   `messaging.message_payload_size_bytes` to `messaging.message.payload_size_bytes`
   `messaging.message_payload_compressed_size_bytes` to `messaging.message.payload_compressed_size_bytes`.
   Clarify that per-message attributes should be populated on links for batching scenarios.
-  ([#TODO](https://github.com/open-telemetry/opentelemetry-specification/pull/TODO)).
+  ([#2763](https://github.com/open-telemetry/opentelemetry-specification/pull/2763)).
 
 ### Compatibility
 
