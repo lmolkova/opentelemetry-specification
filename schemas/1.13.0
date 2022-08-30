@@ -2,6 +2,15 @@ file_format: 1.1.0
 schema_url: https://opentelemetry.io/schemas/1.13.0
 versions:
   1.13.0:
+    spans:
+      changes:
+        # https://github.com/open-telemetry/opentelemetry-specification/pull/TODO
+        - rename_attributes:
+            attribute_map:
+              messaging.message_id: messaging.message.id
+              messaging.conversation_id: messaging.message.conversation_id
+              messaging.message_payload_size_bytes: messaging.message.payload_size_bytes
+              messaging.message_payload_compressed_size_bytes: messaging.message.payload_compressed_size_bytes
     metrics:
       changes:
         # https://github.com/open-telemetry/opentelemetry-specification/pull/2617
