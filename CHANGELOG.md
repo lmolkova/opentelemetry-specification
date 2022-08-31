@@ -76,7 +76,11 @@ release.
 - BREAKING: rename `messaging.message_id` to `messaging.message.id`,
   `messaging.conversation_id` to `messaging.message.conversation_id`,
   `messaging.message_payload_size_bytes` to `messaging.message.payload_size_bytes`,
-  `messaging.message_payload_compressed_size_bytes` to `messaging.message.payload_compressed_size_bytes`.
+  `messaging.message_payload_compressed_size_bytes` to `messaging.message.payload_compressed_size_bytes`,
+  `messaging.kafka.message_key` to `messaging.kafka.message.key`,
+  `messaging.rocketmq.message_type` to `messaging.rocketmq.message.type`,
+  `messaging.rocketmq.message_tag` to `messaging.rocketmq.message.tag`,
+  `messaging.rocketmq.message_keys` to `messaging.rocketmq.message.keys`.
   Clarify that per-message attributes should be populated on links for batching scenarios.
   ([#2763](https://github.com/open-telemetry/opentelemetry-specification/pull/2763)).
 

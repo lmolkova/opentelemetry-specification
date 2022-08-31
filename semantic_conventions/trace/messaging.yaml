@@ -74,29 +74,28 @@ groups:
         type: string
         brief: 'Connection string.'
         examples: ['tibjmsnaming://localhost:7222', 'https://queue.amazonaws.com/80398EXAMPLE/MyQueue']
-      - id: batch_size
+      - id: batch.size
         type: int
-        brief: Number of messages sent, received, or processed in scope of this operation.
+        brief: The number of messages sent, received, or processed in the scope of the batching operation.
         requirement_level:
           conditionally_required: >
-            If available and only if the span describes operations that operate with message batches. It SHOULD NOT be set when
-            operation does not support batching.
+            If available and only if the span describes operations that operate with message batches.
         note: >
-            Instrumentations SHOULD always set `batch_size`on batch `receive` operations even when one message it received to
-            distinguish it from the case when no messages were received.
+            Instrumentation SHOULD always set it on batch `receive` operations regardless
+            of the actual number of received messages (e.g. 0, 1, or more).
         examples: 2
       - ref: messaging.message.id
         requirement_level:
-          recommended: only if batch_size is not set or set to `1`.
+          recommended: only if messaging.batch.size is not set or set to `1`.
       - ref: messaging.message.conversation_id
         requirement_level:
-          recommended: only if batch_size is not set or set to `1`.
+          recommended: only if messaging.batch.size is not set or set to `1`.
       - ref: messaging.message.payload_size_bytes
         requirement_level:
-          recommended: only if batch_size is not set or set to `1`.
+          recommended: only if messaging.batch.size is not set or set to `1`.
       - ref: messaging.message.payload_compressed_size_bytes
         requirement_level:
-          recommended: only if batch_size is not set or set to `1`.
+          recommended: only if messaging.batch.size is not set or set to `1`.
       - ref: net.peer.name
         note: >
           This should be the IP/hostname of the broker (or other network-level peer) this specific message is sent to/received from.
@@ -192,11 +191,11 @@ groups:
     brief: >
       Attributes for Apache Kafka
     attributes:
-      - id: message_key
+      - id: message.key
         type: string
         brief: >
           Message keys in Kafka are used for grouping alike messages to ensure they're processed on the same partition.
-          They differ from `messaging.message_id` in that they're not unique.
+          They differ from `messaging.message.id` in that they're not unique.
           If the key is `null`, the attribute MUST NOT be set.
         note: >
           If the key type is not string, it's string representation has to be supplied for the attribute.
@@ -249,7 +248,7 @@ groups:
         brief: >
           The unique identifier for each client.
         examples: 'myhost@8742@s8083jm'
-      - id: message_type
+      - id: message.type
         type:
           allow_custom_values: false
           members:
@@ -267,12 +266,12 @@ groups:
               brief: 'Transaction message'
         brief: >
           Type of message.
-      - id: message_tag
+      - id: message.tag
         type: string
         brief: >
           The secondary classifier of message besides topic.
         examples: tagA
-      - id: message_keys
+      - id: message.keys
         type: string[]
         brief: >
           Key(s) of message, another way to mark message besides message id.
