@@ -79,23 +79,23 @@ groups:
         brief: The number of messages sent, received, or processed in the scope of the batching operation.
         requirement_level:
           conditionally_required: >
-            If available and only if the span describes operations that operate with message batches.
+            If available within the messaging system, and only if the span describes operations that operate with message batches.
         note: >
             Instrumentation SHOULD always set it on batch `receive` operations regardless
             of the actual number of received messages (e.g. 0, 1, or more).
-        examples: 2
+        examples: [0, 1, 2]
       - ref: messaging.message.id
         requirement_level:
-          recommended: only if messaging.batch.size is not set or set to `1`.
+          recommended: Only if messaging.batch.size is not set or if the value applies to all messages in the batch.
       - ref: messaging.message.conversation_id
         requirement_level:
-          recommended: only if messaging.batch.size is not set or set to `1`.
+          recommended: Only if messaging.batch.size is not set or if the value applies to all messages in the batch.
       - ref: messaging.message.payload_size_bytes
         requirement_level:
-          recommended: only if messaging.batch.size is not set or set to `1`.
+          recommended: Only if messaging.batch.size is not set or if the value applies to all messages in the batch.
       - ref: messaging.message.payload_compressed_size_bytes
         requirement_level:
-          recommended: only if messaging.batch.size is not set or set to `1`.
+          recommended: Only if messaging.batch.size is not set or if the value applies to all messages in the batch.
       - ref: net.peer.name
         note: >
           This should be the IP/hostname of the broker (or other network-level peer) this specific message is sent to/received from.

@@ -136,7 +136,7 @@ The following operations related to messages are defined for these semantic conv
 | `messaging.protocol` | string | The name of the transport protocol. | `AMQP`; `MQTT` | Recommended |
 | `messaging.protocol_version` | string | The version of the transport protocol. | `0.9.1` | Recommended |
 | `messaging.url` | string | Connection string. | `tibjmsnaming://localhost:7222`; `https://queue.amazonaws.com/80398EXAMPLE/MyQueue` | Recommended |
-| `messaging.batch.size` | int | The number of messages sent, received, or processed in the scope of the batching operation. [3] | `2` | Conditionally Required: [4] |
+| `messaging.batch.size` | int | The number of messages sent, received, or processed in the scope of the batching operation. [3] | `0`; `1`; `2` | Conditionally Required: [4] |
 | `messaging.message.conversation_id` | string | The [conversation ID](#conversations) identifying the conversation to which the message belongs, represented as a string. Sometimes called "Correlation ID". | `MyConversationId` | Recommended: [5] |
 | `messaging.message.id` | string | A value used by the messaging system as an identifier for the message, represented as a string. | `452a7c7c7c7048c2f887f61572b18fc2` | Recommended: [6] |
 | `messaging.message.payload_compressed_size_bytes` | int | The compressed size of the message payload in bytes. | `2048` | Recommended: [7] |
@@ -153,15 +153,15 @@ The following operations related to messages are defined for these semantic conv
 
 **[3]:** Instrumentation SHOULD always set it on batch `receive` operations regardless of the actual number of received messages (e.g. 0, 1, or more).
 
-**[4]:** If available and only if the span describes operations that operate with message batches.
+**[4]:** If available within the messaging system, and only if the span describes operations that operate with message batches.
 
-**[5]:** only if messaging.batch.size is not set or set to `1`.
+**[5]:** Only if messaging.batch.size is not set or if the value applies to all messages in the batch.
 
-**[6]:** only if messaging.batch.size is not set or set to `1`.
+**[6]:** Only if messaging.batch.size is not set or if the value applies to all messages in the batch.
 
-**[7]:** only if messaging.batch.size is not set or set to `1`.
+**[7]:** Only if messaging.batch.size is not set or if the value applies to all messages in the batch.
 
-**[8]:** only if messaging.batch.size is not set or set to `1`.
+**[8]:** Only if messaging.batch.size is not set or if the value applies to all messages in the batch.
 
 **[9]:** This should be the IP/hostname of the broker (or other network-level peer) this specific message is sent to/received from.
 
