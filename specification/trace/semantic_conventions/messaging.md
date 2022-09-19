@@ -130,22 +130,22 @@ The following operations related to messages are defined for these semantic conv
 | Attribute  | Type | Description  | Examples  | Requirement Level |
 |---|---|---|---|---|
 | `messaging.system` | string | A string identifying the messaging system. | `kafka`; `rabbitmq`; `rocketmq`; `activemq`; `AmazonSQS` | Required |
-| `messaging.destination` | string | The message destination name. This might be equal to the span name but is required nevertheless. | `MyQueue`; `MyTopic` | Required |
 | `messaging.destination_kind` | string | The kind of message destination | `queue` | Conditionally Required: [1] |
 | `messaging.temp_destination` | boolean | A boolean that is true if the message destination is temporary. |  | Conditionally Required: [2] |
 | `messaging.protocol` | string | The name of the transport protocol. | `AMQP`; `MQTT` | Recommended |
 | `messaging.protocol_version` | string | The version of the transport protocol. | `0.9.1` | Recommended |
 | `messaging.url` | string | Connection string. | `tibjmsnaming://localhost:7222`; `https://queue.amazonaws.com/80398EXAMPLE/MyQueue` | Recommended |
 | `messaging.batch.size` | int | The number of messages sent, received, or processed in the scope of the batching operation. [3] | `0`; `1`; `2` | Conditionally Required: [4] |
-| `messaging.message.conversation_id` | string | The [conversation ID](#conversations) identifying the conversation to which the message belongs, represented as a string. Sometimes called "Correlation ID". | `MyConversationId` | Recommended: [5] |
-| `messaging.message.id` | string | A value used by the messaging system as an identifier for the message, represented as a string. | `452a7c7c7c7048c2f887f61572b18fc2` | Recommended: [6] |
-| `messaging.message.payload_compressed_size_bytes` | int | The compressed size of the message payload in bytes. | `2048` | Recommended: [7] |
-| `messaging.message.payload_size_bytes` | int | The (uncompressed) size of the message payload in bytes. Also use this attribute if it is unknown whether the compressed or uncompressed payload size is reported. | `2738` | Recommended: [8] |
-| [`net.peer.name`](span-general.md) | string | Logical remote hostname, see note below. [9] | `example.com` | Conditionally Required: If available. |
-| [`net.sock.family`](span-general.md) | string | Protocol [address family](https://man7.org/linux/man-pages/man7/address_families.7.html) which is used for communication. | `inet6`; `bluetooth` | Conditionally Required: [10] |
+| `messaging.destination.name` | string | The message destination name [5] | `MyQueue`; `MyTopic` | Conditionally Required: [6] |
+| `messaging.message.conversation_id` | string | The [conversation ID](#conversations) identifying the conversation to which the message belongs, represented as a string. Sometimes called "Correlation ID". | `MyConversationId` | Recommended: [7] |
+| `messaging.message.id` | string | A value used by the messaging system as an identifier for the message, represented as a string. | `452a7c7c7c7048c2f887f61572b18fc2` | Recommended: [8] |
+| `messaging.message.payload_compressed_size_bytes` | int | The compressed size of the message payload in bytes. | `2048` | Recommended: [9] |
+| `messaging.message.payload_size_bytes` | int | The (uncompressed) size of the message payload in bytes. Also use this attribute if it is unknown whether the compressed or uncompressed payload size is reported. | `2738` | Recommended: [10] |
+| [`net.peer.name`](span-general.md) | string | Logical remote hostname, see note below. [11] | `example.com` | Conditionally Required: If available. |
+| [`net.sock.family`](span-general.md) | string | Protocol [address family](https://man7.org/linux/man-pages/man7/address_families.7.html) which is used for communication. | `inet6`; `bluetooth` | Conditionally Required: [12] |
 | [`net.sock.peer.addr`](span-general.md) | string | Remote socket peer address: IPv4 or IPv6 for internet protocols, path for local communication, [etc](https://man7.org/linux/man-pages/man7/address_families.7.html). | `127.0.0.1`; `/tmp/mysql.sock` | Recommended |
-| [`net.sock.peer.name`](span-general.md) | string | Remote socket peer name. | `proxy.example.com` | Recommended: [11] |
-| [`net.sock.peer.port`](span-general.md) | int | Remote socket peer port. | `16456` | Recommended: [12] |
+| [`net.sock.peer.name`](span-general.md) | string | Remote socket peer name. | `proxy.example.com` | Recommended: [13] |
+| [`net.sock.peer.port`](span-general.md) | int | Remote socket peer port. | `16456` | Recommended: [14] |
 
 **[1]:** If the message destination is either a `queue` or `topic`.
 
@@ -155,21 +155,29 @@ The following operations related to messages are defined for these semantic conv
 
 **[4]:** If available within the messaging system, and only if the span describes operations that operate with message batches.
 
-**[5]:** Only if messaging.batch.size is not set or if the value applies to all messages in the batch.
+**[5]:** Destination name SHOULD uniquely identify specific queue, topic, or other entity within broker. If
+broker does not have such notion, destination name SHOULD uniquely identify broker.
 
-**[6]:** Only if messaging.batch.size is not set or if the value applies to all messages in the batch.
+If destination name is the same for all messages being published, 
+it MUST be set on corresponding publish, receive, process or other span.
+
+**[6]:** if available and if the value applies to all messages in the batch.
 
 **[7]:** Only if messaging.batch.size is not set or if the value applies to all messages in the batch.
 
 **[8]:** Only if messaging.batch.size is not set or if the value applies to all messages in the batch.
 
-**[9]:** This should be the IP/hostname of the broker (or other network-level peer) this specific message is sent to/received from.
+**[9]:** Only if messaging.batch.size is not set or if the value applies to all messages in the batch.
 
-**[10]:** If different than `inet` and if any of `net.sock.peer.addr` or `net.sock.host.addr` are set. Consumers of telemetry SHOULD accept both IPv4 and IPv6 formats for the address in `net.sock.peer.addr` if `net.sock.family` is not set. This is to support instrumentations that follow previous versions of this document.
+**[10]:** Only if messaging.batch.size is not set or if the value applies to all messages in the batch.
 
-**[11]:** If different than `net.peer.name` and if `net.sock.peer.addr` is set.
+**[11]:** This should be the IP/hostname of the broker (or other network-level peer) this specific message is sent to/received from.
 
-**[12]:** If defined for the address family and if different than `net.peer.port` and if `net.sock.peer.addr` is set.
+**[12]:** If different than `inet` and if any of `net.sock.peer.addr` or `net.sock.host.addr` are set. Consumers of telemetry SHOULD accept both IPv4 and IPv6 formats for the address in `net.sock.peer.addr` if `net.sock.family` is not set. This is to support instrumentations that follow previous versions of this document.
+
+**[13]:** If different than `net.peer.name` and if `net.sock.peer.addr` is set.
+
+**[14]:** If defined for the address family and if different than `net.peer.port` and if `net.sock.peer.addr` is set.
 
 `messaging.destination_kind` MUST be one of the following:
 
@@ -182,6 +190,8 @@ The following operations related to messages are defined for these semantic conv
 Additionally `net.peer.port` from the [network attributes][] is recommended.
 Furthermore, it is strongly recommended to add the [`net.transport`][] attribute and follow its guidelines, especially for in-process queueing systems (like [Hangfire][], for example).
 These attributes should be set to the broker to which the message is sent/from which it is received.
+
+Note that attributes in `messaging.message` namespace describe message. It's recommended to use `messaging.{system}.message` namespace for specific messaging system attributes that describe individual messages.
 
 [network attributes]: span-general.md#general-network-connection-attributes
 [`net.transport`]: span-general.md#network-transport-attributes
@@ -219,10 +229,17 @@ Following attributes apply to links describing each message.
 <!-- semconv messaging.message -->
 | Attribute  | Type | Description  | Examples  | Requirement Level |
 |---|---|---|---|---|
+| `messaging.destination.name` | string | The message destination name [1] | `MyQueue`; `MyTopic` | Recommended |
 | `messaging.message.id` | string | A value used by the messaging system as an identifier for the message, represented as a string. | `452a7c7c7c7048c2f887f61572b18fc2` | Recommended |
 | `messaging.message.conversation_id` | string | The [conversation ID](#conversations) identifying the conversation to which the message belongs, represented as a string. Sometimes called "Correlation ID". | `MyConversationId` | Recommended |
 | `messaging.message.payload_size_bytes` | int | The (uncompressed) size of the message payload in bytes. Also use this attribute if it is unknown whether the compressed or uncompressed payload size is reported. | `2738` | Recommended |
 | `messaging.message.payload_compressed_size_bytes` | int | The compressed size of the message payload in bytes. | `2048` | Recommended |
+
+**[1]:** Destination name SHOULD uniquely identify specific queue, topic, or other entity within broker. If
+broker does not have such notion, destination name SHOULD uniquely identify broker.
+
+If destination name is the same for all messages being published, 
+it MUST be set on corresponding publish, receive, process or other span.
 <!-- endsemconv -->
 
 ### Attributes specific to certain messaging systems

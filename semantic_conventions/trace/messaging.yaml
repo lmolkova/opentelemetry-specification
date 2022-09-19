@@ -1,26 +1,36 @@
 groups:
   - id: messaging.message
-    prefix: messaging.message
+    prefix: messaging
     type: span
     brief: 'Semantic convention describing per-message attributes populated on messaging spans or links.'
     attributes:
-      - id: id
+      - id: destination.name
+        type: string
+        brief: 'The message destination name'
+        note: |
+          Destination name SHOULD uniquely identify specific queue, topic, or other entity within broker. If
+          broker does not have such notion, destination name SHOULD uniquely identify broker.
+
+          If destination name is the same for all messages being published, 
+          it MUST be set on corresponding publish, receive, process or other span.
+        examples: ['MyQueue', 'MyTopic']
+      - id: message.id
         type: string
         brief: 'A value used by the messaging system as an identifier for the message, represented as a string.'
         examples: '452a7c7c7c7048c2f887f61572b18fc2'
-      - id: conversation_id
+      - id: message.conversation_id
         type: string
         brief: >
           The [conversation ID](#conversations) identifying the conversation to which the message belongs,
           represented as a string. Sometimes called "Correlation ID".
         examples: 'MyConversationId'
-      - id: payload_size_bytes
+      - id: message.payload_size_bytes
         type: int
         brief: >
           The (uncompressed) size of the message payload in bytes.
           Also use this attribute if it is unknown whether the compressed or uncompressed payload size is reported.
         examples: 2738
-      - id: payload_compressed_size_bytes
+      - id: message.payload_compressed_size_bytes
         type: int
         brief: 'The compressed size of the message payload in bytes.'
         examples: 2048
@@ -37,13 +47,6 @@ groups:
         requirement_level: required
         brief: 'A string identifying the messaging system.'
         examples: ['kafka', 'rabbitmq', 'rocketmq', 'activemq', 'AmazonSQS']
-      - id: destination
-        type: string
-        requirement_level: required
-        brief: >
-          The message destination name. This might be equal to the span name
-          but is required nevertheless.
-        examples: ['MyQueue', 'MyTopic']
       - id: destination_kind
         type:
           allow_custom_values: false
@@ -84,6 +87,9 @@ groups:
             Instrumentation SHOULD always set it on batch `receive` operations regardless
             of the actual number of received messages (e.g. 0, 1, or more).
         examples: [0, 1, 2]
+      - ref: messaging.destination.name
+        requirement_level:
+          conditionally_required: if available and if the value applies to all messages in the batch.
       - ref: messaging.message.id
         requirement_level:
           recommended: Only if messaging.batch.size is not set or if the value applies to all messages in the batch.
