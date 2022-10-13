@@ -86,28 +86,24 @@ groups:
   - id: messaging_vnext.message.attributes
     prefix: messaging_vnext.message
     type: span # todo: this is an attribute group, not a span, but there is no tooling support for this
-    brief: 'Attributes describing individual messages, could be added on links or publish/consume/settle spans.'
+    brief: 'Attributes describing individual messages, could be added on links or publish/consume/settle spans, but not on both'
     attributes:
       - id: id
         type: string
         brief: 'A value used by the messaging system as an identifier for the message, represented as a string.'
         examples: ['452a7c7c7c7048c2f887f61572b18fc2']
-        note: Could be set either on link or on producer/consumer/settle span, but not on both
       - id: correlation_id
         type: string
         brief: 'A value used by application to correlate request and responses, represented as a string.'
         examples: ['1452a7c7c7c7048c2f887f61572b18fc']
-        note: Could be set either on link or on producer/consumer/settle span, but not on both
       - id: timestamp
         type: int
         brief: 'Message timestamp that matches either creation time or enqueued time. The earliest time available should be used. MUST be absolute Unix epoch time.'
         examples: [1661407697]
-        note: Could be set either on link or on producer/consumer/settle span, but not on both
       - id: redelivered
         type: boolean
         brief: 'Indicates if message was already delivered to a consumer.'
         examples: [true]
-        note: Could be set either on link or on producer/consumer/settle span, but not on both
 
   - id: messaging_vnext.publish_and_create
     prefix: messaging_vnext
@@ -177,17 +173,6 @@ groups:
       - ref: messaging_vnext.message.correlation_id
       - ref: messaging_vnext.message.timestamp
 
-  - id: messaging_vnext.link.consume
-    prefix: messaging_vnext.message
-    name: 'messaging_vnext.link.consume' # links not supported by otel schema
-    type: event # links not supported
-    brief: 'Link describing each message being received/delivered/settled.'
-    attributes:
-      - ref: messaging_vnext.message.id
-      - ref: messaging_vnext.message.correlation_id
-      - ref: messaging_vnext.message.timestamp
-      - ref: messaging_vnext.message.redelivered
-
   - id: messaging_vnext.consumer
     prefix: messaging_vnext
     type: span
@@ -247,7 +232,6 @@ groups:
       - ref: messaging_vnext.message.correlation_id
       - ref: messaging_vnext.message.timestamp
       - ref: messaging_vnext.message.redelivered
-    events: [messaging_vnext.link.consume] #link should be populated for pull-based scenarios. Push-based scenarios should use received message context as a parent
 
   - id: messaging_vnext.consumer.settle.message
     prefix: messaging_vnext
@@ -264,7 +248,6 @@ groups:
       - ref: messaging_vnext.message.correlation_id
       - ref: messaging_vnext.message.timestamp
       - ref: messaging_vnext.message.redelivered
-    events: [messaging_vnext.link.consume]  #links
 
   - id: messaging_vnext.consumer.settle.offset
     prefix: messaging_vnext
@@ -276,3 +259,4 @@ groups:
       - id: offset_todo
         type: int
         brief: 'Offset'
+        requirement_level: required
