@@ -1,0 +1,278 @@
+groups:
+  - id: messaging_vnext
+    prefix: messaging_vnext
+    type: span
+    brief: >
+        This document defines the attributes used in messaging systems.
+    attributes:
+      - id: system
+        type: string
+        requirement_level: required
+        brief: 'A string identifying the messaging system.'
+        examples: ['kafka', 'rabbitmq', 'rocketmq', 'activemq', 'AmazonSQS']
+        note: |        
+              A string identifying the messaging broker or intermediary, e. g. `kafka`,
+              `rabbitmq`, `rocketmq`, `AzureEventHubs`, or `AmazonSQS`.
+
+              If the messaging broker or intermediary are not known, this should be set to a
+              value that best identifies the usage scenario. This could be the messaging
+              library used (e. g. `jms`), or the protocol used (e. g. `amqp`).
+
+              A list of recommended values will be provided independently of the messaging
+              semantic conventions document.
+      - id: operation
+        requirement_level: required
+        brief: 'This attribute should be set to one of the [pre-defined operation names](#operation-names).'
+        type:
+          allow_custom_values: true
+          members:
+            - id: publish
+              value: 'publish'
+              brief: One ore more messages are provided for publishing to an intermediary.'
+            - id: create
+              value: 'create'
+              brief: 'A message is created.'
+            - id: receive
+              value: 'receive'
+              brief: 'One or more messages are requested by a consumer.'
+            - id: deliver
+              value: 'deliver'
+              brief: 'One or more message are passed to a consumer.'
+            - id: settle
+              value: 'settle'
+              brief: 'One or more message are settled.'
+
+  - id: messaging_vnext.common
+    prefix: messaging_vnext
+    type: span
+    extends: messaging_vnext
+    brief: >
+        This document defines the attributes used in
+        messaging systems.
+    attributes:
+      - ref: messaging_vnext.system
+      - ref: messaging_vnext.operation
+      - ref: net.peer.name
+        note: >
+          This should be the hostname of the broker this specific operation is performed against.
+        requirement_level:
+          conditionally_required: If available
+      - ref: net.peer.port
+        note: >
+          This should be the port of the broker this specific operation is performed for.
+        requirement_level:
+          conditionally_required: If available and if not default for the network protocol used
+      - ref: net.sock.peer.addr
+      - ref: net.sock.peer.port
+      - ref: net.sock.family
+      - ref: net.sock.peer.name
+        requirement_level:
+          recommended: If different than `net.peer.name` and if `net.sock.peer.addr` is set.
+      - ref: net.app.protocol.name
+      - ref: net.app.protocol.version
+      - id: batch.size
+        type: int
+        brief: The number of messages sent, received, or processed in the scope of the batching operation.
+        requirement_level:
+          conditionally_required: >
+            If available within the messaging system, and only if the span describes operations that operate with message batches.
+        note: >
+            Instrumentation SHOULD always set it on batch `receive` operations regardless
+            of the actual number of received messages (e.g. 0, 1, or more).
+        examples: [0, 1]
+    constraints:
+      - include: network
+
+  - id: messaging_vnext.message.attributes
+    prefix: messaging_vnext.message
+    type: span # todo: this is an attribute group, not a span, but there is no tooling support for this
+    brief: 'Attributes describing individual messages, could be added on links or publish/consume/settle spans.'
+    attributes:
+      - id: id
+        type: string
+        brief: 'A value used by the messaging system as an identifier for the message, represented as a string.'
+        examples: ['452a7c7c7c7048c2f887f61572b18fc2']
+        note: Could be set either on link or on producer/consumer/settle span, but not on both
+      - id: correlation_id
+        type: string
+        brief: 'A value used by application to correlate request and responses, represented as a string.'
+        examples: ['1452a7c7c7c7048c2f887f61572b18fc']
+        note: Could be set either on link or on producer/consumer/settle span, but not on both
+      - id: timestamp
+        type: int
+        brief: 'Message timestamp that matches either creation time or enqueued time. The earliest time available should be used. MUST be absolute Unix epoch time.'
+        examples: [1661407697]
+        note: Could be set either on link or on producer/consumer/settle span, but not on both
+      - id: redelivered
+        type: boolean
+        brief: 'Indicates if message was already delivered to a consumer.'
+        examples: [true]
+        note: Could be set either on link or on producer/consumer/settle span, but not on both
+
+  - id: messaging_vnext.publish_and_create
+    prefix: messaging_vnext
+    type: span
+    extends: messaging_vnext
+    span_kind: producer
+    brief: 'Semantic convention for producer of messages applying to publish call instrumentation that does not instrument message creation'
+    attributes:
+      - id: destination.name
+        type: string
+        requirement_level:
+          conditionally_required: If available and only if different for multiple messages sent in a single batch.
+        brief: 'A string identifying queue, topic, or other entity name within a broker or globally.'
+        note: |
+          If messages in a batch have different `messaging_vnext.destination.name` it MUST
+          be populated on each corresponding link to message context. Otherwise it MUST be populated on 
+          publish span.
+        examples: ['MyQueue', 'MyTopic']      
+      - id: destination.kind
+        type:
+          allow_custom_values: true
+          members:
+            - id: queue
+              value: "queue"
+              brief: "A message sent to a queue"
+            - id: topic
+              value: "topic"
+              brief: "A message sent to a topic"
+        requirement_level:
+          conditionally_required: If the message destination is either a `queue` or `topic`.
+        brief: 'The kind of message destination'
+        note: | 
+          Different brokers have different concepts of message destinations, the most
+          popular being queues and topics. One of the most important differences in
+          destination kinds is how messages are settled: messages are settled
+          individually in queues, whereas messages are settled based on checkpoints in
+          topics. Individual brokers might specify additional destination kinds.
+      - id: destination.template
+        type: string
+        requirement_level:
+          conditionally_required: when available
+        brief: 'Low cardinality field representing messaging destination'
+        examples: ['/customers/{customerId}']
+        note: | 
+          In some instances, message destination names are constructed from templates. An
+          example would be a destination name involving a user name or product id.
+          Although the destination name in this case is of high cardinality, the
+          underlying template is of low cardinality and can be effectively used for
+          grouping and searching spans.
+
+          This attribute is optional, but recommended if the destination name is created
+          based on such a template.
+      - id: destination.temporary
+        type: boolean
+        requirement_level:
+          recommended: when supported by messaging system and only if the destination is temporary. If missing, assumed to be false.
+        brief: 'denotes that the destination is a temporary destination and might not exist anymore after messages are processed'
+      - id: destination.anonymous
+        type: boolean
+        requirement_level:
+          recommended: when supported by messaging system and only if the destination is anonymous. If missing, assumed to be false.
+        brief: 'denotes that the destination is an anonymous destination (could be unnamed or have auto-generated name)'
+        note: |
+          If set to `true`, this flag denotes that the destination is a temporary
+          destination and might not exist anymore after messages are processed.
+      - ref: messaging_vnext.message.id
+      - ref: messaging_vnext.message.correlation_id
+      - ref: messaging_vnext.message.timestamp
+
+  - id: messaging_vnext.link.consume
+    prefix: messaging_vnext.message
+    name: 'messaging_vnext.link.consume' # links not supported by otel schema
+    type: event # links not supported
+    brief: 'Link describing each message being received/delivered/settled.'
+    attributes:
+      - ref: messaging_vnext.message.id
+      - ref: messaging_vnext.message.correlation_id
+      - ref: messaging_vnext.message.timestamp
+      - ref: messaging_vnext.message.redelivered
+
+  - id: messaging_vnext.consumer
+    prefix: messaging_vnext
+    type: span
+    extends: messaging_vnext.common
+    span_kind: consumer
+    brief: 'Semantic convention for a consumer of messages received from a messaging system'
+    attributes:
+      - id: source.name
+        type: string
+        requirement_level:
+          conditionally_required: When available and the same for all messages being sent.
+        brief: 'A string identifying queue, topic, or other entity name within broker or globally'
+        examples: ['MyQueue', 'MyTopic']
+        note: | 
+          The source name defines the name of the source of a message, as
+          specified by the consumer. There are different kinds of sources, varying
+          between message brokers, e. g. queues in RabbitMQ or topics in
+          Kafka.
+
+          This attributes is required for consumer spans modelling `deliver`, `receive`,
+          or `settle` operations. The name of the source a message is received from can
+          be different from the name of the destination a message was sent to.    
+
+          If messages in a batch have different `messaging_vnext.source.name`, it MUST
+          be populated on each corresponding link to message context. Otherwise it MUST be populated on 
+          consumer span.          
+      - id: source.kind
+        type:
+          allow_custom_values: true
+          members:
+            - id: queue
+              value: "queue"
+              brief: "A message sent to a queue"
+            - id: topic
+              value: "topic"
+              brief: "A message sent to a topic"
+        requirement_level:
+          conditionally_required: If the message destination is either a `queue` or `topic`.
+        brief: 'The kind of message destination'
+      - id: source.template
+        type: string
+        requirement_level:
+          conditionally_required: when available
+        brief: 'Low cardinality field representing messaging destination'
+        examples: ['/customers/{customerId}']
+      - id: source.temporary
+        type: boolean
+        requirement_level:
+          recommended: when supported by messaging system and only if the source is temporary. If missing, assumed to be false.
+        brief: 'denotes that the source is a temporary source and might not exist anymore after messages are processed'
+      - id: source.anonymous
+        type: boolean
+        requirement_level:
+          recommended: when supported by messaging system and only if the destination is anonymous. If missing, assumed to be false.
+        brief: 'denotes that the source is an anonymous source (could be unnamed or have auto-generated name)'
+      - ref: messaging_vnext.message.id
+      - ref: messaging_vnext.message.correlation_id
+      - ref: messaging_vnext.message.timestamp
+      - ref: messaging_vnext.message.redelivered
+    events: [messaging_vnext.link.consume] #link should be populated for pull-based scenarios. Push-based scenarios should use received message context as a parent
+
+  - id: messaging_vnext.consumer.settle.message
+    prefix: messaging_vnext
+    type: span
+    extends: messaging_vnext.common
+    span_kind: internal
+    brief: 'Semantic convention for settling individual message'
+    attributes:
+      - id: settlement_type_todo
+        type: string
+        brief: 'Settlement operation'
+        examples: ['complete', 'abandon', 'defer']
+      - ref: messaging_vnext.message.id
+      - ref: messaging_vnext.message.correlation_id
+      - ref: messaging_vnext.message.timestamp
+      - ref: messaging_vnext.message.redelivered
+    events: [messaging_vnext.link.consume]  #links
+
+  - id: messaging_vnext.consumer.settle.offset
+    prefix: messaging_vnext
+    type: span
+    extends: messaging_vnext.common
+    span_kind: internal
+    brief: 'Semantic convention for settling by offset'
+    attributes:
+      - id: offset_todo
+        type: int
+        brief: 'Offset'
