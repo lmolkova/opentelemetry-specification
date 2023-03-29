@@ -1,25 +1,53 @@
 groups:
+  - id: attributes.http.deprecated
+    type: attribute_group
+    brief: "Describes deprecated HTTP attributes."
+    prefix: http
+    attributes:
+      - id: method
+        type: string
+        brief: 'Deprecated, use `http.request.method` instead.'
+      - id: status_code
+        type: int
+        type: string
+        brief: 'Deprecated, use `http.response.status_code` instead.'
+      - id: scheme
+        type: string
+        brief: 'Deprecated, use `url.scheme` instead.'
+      - id: url
+        type: string
+        brief: 'Deprecated, use `url.full` instead.'
+      - id: target
+        type: string
+        brief: 'Deprecated, use `url.path` and `url.query` instead.'
+      - id: http.request_content_length
+        type: int
+        brief: 'Deprecated, use `http.request.body.bytes` instead.'        
+      - id: http.response_content_length
+        type: int
+        brief: 'Deprecated, use `http.response.body.bytes` instead.'
+
   - id: attributes.http.common
     type: attribute_group
     brief: "Describes HTTP attributes."
     prefix: http
     attributes:
-      - id: method
+      - id: request.method
         type: string
         requirement_level: required
         brief: 'HTTP request method.'
         examples: ["GET", "POST", "HEAD"]
-      - id: status_code
+      - id: response.status_code
         type: int
         requirement_level:
           conditionally_required: If and only if one was received/sent.
         brief: '[HTTP response status code](https://tools.ietf.org/html/rfc7231#section-6).'
         examples: [200]
-      - ref: net.protocol.name
+      - ref: network.protocol.name
         examples: ['http', 'spdy']
         requirement_level:
           recommended: if not default (`http`).
-      - ref: net.protocol.version
+      - ref: network.protocol.version
         examples: ['1.0', '1.1', '2.0']
 
   - id: attributes.http.client
@@ -27,7 +55,7 @@ groups:
     type: attribute_group
     brief: 'HTTP Client spans attributes'
     attributes:
-      - ref: net.peer.name
+      - ref: server.address
         requirement_level: required
         brief: >
           Host identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to.
@@ -39,7 +67,7 @@ groups:
           - Host identifier of the `Host` header
 
           SHOULD NOT be set if capturing it would require an extra DNS lookup.
-      - ref: net.peer.port
+      - ref: server.port
         requirement_level:
           conditionally_required: If not default (`80` for `http` scheme, `443` for `https`).
         brief: >
@@ -53,11 +81,6 @@ groups:
     type: attribute_group
     brief: 'HTTP Server spans attributes'
     attributes:
-      - id: scheme
-        type: string
-        brief: 'The URI scheme identifying the used protocol.'
-        requirement_level: required
-        examples: ["http", "https"]
       - id: route
         type: string
         requirement_level:
@@ -69,7 +92,9 @@ groups:
           MUST NOT be populated when this is not supported by the HTTP server framework as the route attribute should have low-cardinality and the URI path can NOT substitute it.
 
           SHOULD include the [application root](/specification/trace/semantic_conventions/http.md#http-server-definitions) if there is one.
-      - ref: net.host.name
+      - ref: url.scheme
+        requirement_level: required
+      - ref: server.address
         requirement_level: required
         brief: >
           Name of the local HTTP server that received the request.
@@ -83,8 +108,7 @@ groups:
           - Host identifier of the `Host` header
 
           SHOULD NOT be set if only IP address is available and capturing name would require a reverse DNS lookup.
-
-      - ref: net.host.port
+      - ref: server.port
         requirement_level:
           conditionally_required: If not default (`80` for `http` scheme, `443` for `https`).
         brief: >

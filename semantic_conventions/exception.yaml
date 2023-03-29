@@ -13,10 +13,14 @@ groups:
           The dynamic type of the exception should be preferred over the static type
           in languages that support it.
         examples: ["java.net.ConnectException", "OSError"]
+        stability: deprecated
+        brief: Deprecated, use the `error.type` attribute instead.
       - id: message
         type: string
         brief: The exception message.
         examples: ["Division by zero", "Can't convert 'int' object to str implicitly"]
+        stability: deprecated
+        brief: Deprecated, use the `error.message` attribute instead.
       - id: stacktrace
         type: string
         brief: >
@@ -26,6 +30,9 @@ groups:
         at com.example.GenerateTrace.methodB(GenerateTrace.java:13)\n
         at com.example.GenerateTrace.methodA(GenerateTrace.java:9)\n
         at com.example.GenerateTrace.main(GenerateTrace.java:5)'
+        stability: deprecated
+        brief: Deprecated, use the `error.stack_trace` attribute instead.
+
 
     constraints:
       - any_of:
