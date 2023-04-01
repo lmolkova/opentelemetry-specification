@@ -16,7 +16,7 @@ exceptions.
 ## Recording an Exception
 
 An exception SHOULD be recorded as an `Event` on the span during which it occurred.
-The name of the event MUST be `"exception"`.
+The name of the event MUST be `"error"`.
 
 A typical template for an auto-instrumentation implementing this semantic convention
 using an [API-provided `recordException` method](../api.md#record-exception)
@@ -27,7 +27,7 @@ Span span = myTracer.startSpan(/*...*/);
 try {
   // Code that does the actual work which the Span represents
 } catch (Throwable e) {
-  span.recordException(e, Attributes.of("exception.escaped", true));
+  span.recordException(e, Attributes.of("error.escaped", true));
   throw e;
 } finally {
   span.end();
@@ -39,15 +39,15 @@ try {
 The table below indicates which attributes should be added to the `Event` and
 their types.
 
-<!-- semconv trace-exception -->
-The event name MUST be `exception`.
+<!-- semconv trace-error -->
+The event name MUST be `error`.
 
 | Attribute  | Type | Description  | Examples  | Requirement Level |
 |---|---|---|---|---|
-| `exception.escaped` | boolean | SHOULD be set to true if the exception event is recorded at a point where it is known that the exception is escaping the scope of the span. [1] |  | Recommended |
-| `exception.message` | string | The exception message. | `Division by zero`; `Can't convert 'int' object to str implicitly` | See below |
-| `exception.stacktrace` | string | A stacktrace as a string in the natural representation for the language runtime. The representation is to be determined and documented by each language SIG. | `Exception in thread "main" java.lang.RuntimeException: Test exception\n at com.example.GenerateTrace.methodB(GenerateTrace.java:13)\n at com.example.GenerateTrace.methodA(GenerateTrace.java:9)\n at com.example.GenerateTrace.main(GenerateTrace.java:5)` | Recommended |
-| `exception.type` | string | The type of the exception (its fully-qualified class name, if applicable). The dynamic type of the exception should be preferred over the static type in languages that support it. | `java.net.ConnectException`; `OSError` | See below |
+| `error.escaped` | boolean | SHOULD be set to true if the exception event is recorded at a point where it is known that the exception is escaping the scope of the span. [1] |  | Recommended |
+| `error.message` | string | The exception message. | `Division by zero`; `Can't convert 'int' object to str implicitly` | See below |
+| `error.stack_trace` | string | A stacktrace as a string in the natural representation for the language runtime. The representation is to be determined and documented by each language SIG. | `Exception in thread "main" java.lang.RuntimeException: Test exception\n at com.example.GenerateTrace.methodB(GenerateTrace.java:13)\n at com.example.GenerateTrace.methodA(GenerateTrace.java:9)\n at com.example.GenerateTrace.main(GenerateTrace.java:5)` | Recommended |
+| `error.type` | string | The type of the exception (its fully-qualified class name, if applicable). The dynamic type of the exception should be preferred over the static type in languages that support it. | `java.net.ConnectException`; `OSError` | See below |
 
 **[1]:** An exception is considered to have escaped (or left) the scope of a span,
 if that span is ended while the exception is still logically "in flight".
@@ -62,14 +62,14 @@ will escape, if one checks for an active exception just before ending the span,
 as done in the [example above](#recording-an-exception).
 
 It follows that an exception may still escape the scope of the span
-even if the `exception.escaped` attribute was not set or set to false,
+even if the `error.escaped` attribute was not set or set to false,
 since the event might have been recorded at a time where it was not
 clear whether the exception will escape.
 
 **Additional attribute requirements:** At least one of the following sets of attributes is required:
 
-* `exception.type`
-* `exception.message`
+* `error.type`
+* `error.message`
 <!-- endsemconv -->
 
 ### Stacktrace Representation

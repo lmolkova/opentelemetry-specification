@@ -92,7 +92,7 @@ groups:
       - ref: http.response.status_code
       - ref: network.protocol.name
       - ref: network.protocol.version
-      - ref: server.ip
+      - ref: server.nat.address
 
   - id: metric.http.client.request.size
     type: metric
@@ -107,7 +107,7 @@ groups:
       - ref: http.response.status_code
       - ref: network.protocol.name
       - ref: network.protocol.version
-      - ref: server.ip
+      - ref: server.nat.address
 
   - id: metric.http.client.response.size
     type: metric
@@ -122,4 +122,4 @@ groups:
       - ref: http.response.status_code
       - ref: network.protocol.name
       - ref: network.protocol.version
-      - ref: server.ip
+      - ref: server.nat.address

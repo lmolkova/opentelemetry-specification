@@ -6,11 +6,11 @@ groups:
       This document defines attributes for exceptions represented using Log
       Records.
     attributes:
-      - ref: exception.type
-      - ref: exception.message
-      - ref: exception.stacktrace
+      - ref: error.type
+      - ref: error.message
+      - ref: error.stack_trace
 
     constraints:
       - any_of:
-          - "exception.type"
-          - "exception.message"
+          - "error.type"
+          - "error.message"

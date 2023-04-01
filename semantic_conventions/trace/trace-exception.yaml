@@ -8,7 +8,7 @@ groups:
     attributes:
       - ref: error.type
       - ref: error.message
-      - ref: error.stacktrace
+      - ref: error.stack_trace
       - id: escaped
         type: boolean
         brief: >
@@ -28,7 +28,7 @@ groups:
           as done in the [example above](#recording-an-exception).
 
           It follows that an exception may still escape the scope of the span
-          even if the `exception.escaped` attribute was not set or set to false,
+          even if the `error.escaped` attribute was not set or set to false,
           since the event might have been recorded at a time where it was not
           clear whether the exception will escape.
 

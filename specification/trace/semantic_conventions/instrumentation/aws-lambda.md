@@ -81,7 +81,7 @@ be set to the [resource property][] from the proxy request event, which correspo
 route instead of the function name.
 
 [`faas.trigger`][faas] MUST be set to `http`. [HTTP attributes](../http.md) SHOULD be set based on the
-available information in the Lambda event initiated by the proxy request. `http.scheme` is available as the
+available information in the Lambda event initiated by the proxy request. `url.scheme` is available as the
 `x-forwarded-proto` header in the Lambda event. Refer to the [input event format][] for more details.
 
 [resource property]: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-input-format
@@ -164,16 +164,16 @@ Function F:    | Span Function |
 | `faas.invocation_id` | | `79104EXAMPLEB723` |
 | `faas.trigger` | | `http` |
 | `cloud.account.id` | | `12345678912` |
-| `net.peer.name` | `foo.execute-api.us-east-1.amazonaws.com` |  |
-| `net.peer.port` | `413` |  |
-| `http.method` | `GET` | `GET` |
-| `http.user_agent` | `okhttp 3.0` | `okhttp 3.0` |
-| `http.url` | `https://foo.execute-api.us-east-1.amazonaws.com/pets/10` |  |
-| `http.scheme` | | `https` |
+| `server.address` | `foo.execute-api.us-east-1.amazonaws.com` |  |
+| `server.port` | `413` |  |
+| `http.request.method` | `GET` | `GET` |
+| `user_agent.original` | `okhttp 3.0` | `okhttp 3.0` |
+| `url.full` | `https://foo.execute-api.us-east-1.amazonaws.com/pets/10` |  |
+| `url.scheme` | | `https` |
 | `http.host` | | `foo.execute-api.us-east-1.amazonaws.com` |
-| `http.target` | | `/pets/10` |
+| `url.path` | | `/pets/10` |
 | `http.route` | | `/pets/{petId}` |
-| `http.status_code` | `200` | `200` |
+| `http.response.status_code` | `200` | `200` |
 
 ### API Gateway Request Proxy (Lambda tracing active)
 

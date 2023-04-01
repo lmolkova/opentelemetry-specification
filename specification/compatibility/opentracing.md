@@ -387,12 +387,12 @@ to an `Event` with the conventions outlined in the
 - If an entry with `error.object` key exists and the value is a language-specific
   error object, a call to `RecordException(e)` is performed along the rest of
   the specified key/value pair set as additional event attributes.
-- Else, a call to `AddEvent` is performed with `name` being set to `exception`,
+- Else, a call to `AddEvent` is performed with `name` being set to `error`,
   along the specified key/value pair set as additional event attributes,
   including mapping of the following key/value pairs:
-  - `error.kind` maps to `exception.type`.
-  - `message` maps to `exception.message`.
-  - `stack` maps to `exception.stacktrace`.
+  - `error.kind` maps to `error.type`.
+  - `message` maps to `error.message`.
+  - `stack` maps to `error.stacktrace`.
 
 If an explicit timestamp is specified, a conversion MUST be done to match the
 OpenTracing and OpenTelemetry units.

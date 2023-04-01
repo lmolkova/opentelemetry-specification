@@ -8,33 +8,19 @@ groups:
     attributes:
       - id: type
         type: string
-        brief: >
-          The type of the exception (its fully-qualified class name, if applicable).
-          The dynamic type of the exception should be preferred over the static type
-          in languages that support it.
-        examples: ["java.net.ConnectException", "OSError"]
-        stability: deprecated
         brief: Deprecated, use the `error.type` attribute instead.
-      - id: message
-        type: string
-        brief: The exception message.
-        examples: ["Division by zero", "Can't convert 'int' object to str implicitly"]
         stability: deprecated
+        examples: ["java.net.ConnectException", "OSError"]
+      - id: message
         brief: Deprecated, use the `error.message` attribute instead.
+        type: string
+        stability: deprecated
+        examples: ["Division by zero", "Can't convert 'int' object to str implicitly"]        
       - id: stacktrace
         type: string
-        brief: >
-          A stacktrace as a string in the natural representation for the language runtime.
-          The representation is to be determined and documented by each language SIG.
+        brief: Deprecated, use the `error.stack_trace` attribute instead.
+        stability: deprecated
         examples: 'Exception in thread "main" java.lang.RuntimeException: Test exception\n
         at com.example.GenerateTrace.methodB(GenerateTrace.java:13)\n
         at com.example.GenerateTrace.methodA(GenerateTrace.java:9)\n
         at com.example.GenerateTrace.main(GenerateTrace.java:5)'
-        stability: deprecated
-        brief: Deprecated, use the `error.stack_trace` attribute instead.
-
-
-    constraints:
-      - any_of:
-          - "exception.type"
-          - "exception.message"
