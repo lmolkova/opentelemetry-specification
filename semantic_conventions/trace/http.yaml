@@ -24,9 +24,6 @@ groups:
         examples: 3495
       - ref: http.request.method
         sampling_relevant: true
-      - ref: server.nat.ip
-      - ref: server.nat.port
-      - ref: server.nat.address
       - ref: network.type
         examples: ['inet', 'inet6']
       - ref: user_agent.original
@@ -82,6 +79,9 @@ groups:
         note: >
           When [request target](https://www.rfc-editor.org/rfc/rfc9110.html#target.resource) is absolute URI, `server.address` MUST match
           URI port identifier, otherwise it MUST match `Host` header port identifier.
+      - ref: server.nat.ip
+      - ref: server.nat.port
+      - ref: server.nat.address
 
   - id: trace.http.server
     prefix: http
@@ -152,3 +152,5 @@ groups:
       - ref: server.nat.ip
         requirement_level: opt_in
       - ref: server.nat.port
+      - ref: client.address
+      - ref: client.port

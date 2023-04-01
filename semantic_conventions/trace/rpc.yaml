@@ -82,7 +82,7 @@ groups:
     brief: 'Semantic Convention for RPC server spans'
     attributes:
       - ref: client.address
-      - ref: client.port      
+      - ref: client.port
 
   - id: rpc.grpc
     prefix: rpc.grpc

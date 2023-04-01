@@ -68,9 +68,9 @@ Examples of span names:
 | [`network.transport`](span-general.md) | string | Transport protocol used. See note below. | `ip_tcp` | Conditionally Required: See below |
 | [`network.type`](span-general.md) | string | Protocol [address family](https://man7.org/linux/man-pages/man7/address_families.7.html) which is used for communication. | `inet6`; `bluetooth` | Conditionally Required: If and only if `server.nat.address` is set. |
 | [`server.address`](span-general.md) | string | RPC server [host name](https://grpc.github.io/grpc/core/md_doc_naming.html). [3] | `example.com` | Required |
-| [`server.nat.address`](span-general.md) | string | Proxy server FQDN. If not known, IP address should be used. | `proxy.example.com` | Recommended: [4] |
-| [`server.nat.ip`](span-general.md) | string | Proxy IP address | `127.0.0.1` | Recommended: If address is known to be an IP address. |
-| [`server.nat.port`](span-general.md) | int | Proxy port. | `16456` | Recommended: [5] |
+| [`server.nat.address`](span-general.md) | string | Proxy server FQDN. If not known, IP address should be used. | `proxy.example.com` | Recommended: If communication is done via proxy. |
+| [`server.nat.ip`](span-general.md) | string | Proxy IP address. | `127.0.0.1` | Recommended: If address is known to be an IP address. |
+| [`server.nat.port`](span-general.md) | int | Proxy port. | `16456` | Recommended: [4] |
 | [`server.port`](span-general.md) | int | Server port number | `80`; `8080`; `443` | Conditionally Required: See below |
 
 **[1]:** This is the logical name of the service from the RPC interface perspective, which can be different from the name of any implementing class. The `code.namespace` attribute may be used to store the latter (despite the attribute name, it may include a class name; e.g., class with method actually executing the call on the server side, RPC client stub class on the client side).
@@ -79,9 +79,7 @@ Examples of span names:
 
 **[3]:** May contain server IP address, DNS name, or local socket name. When host component is an IP address, instrumentations SHOULD NOT do a reverse proxy lookup to obtain DNS name and SHOULD set `server.address` to the IP address provided in the host component.
 
-**[4]:** If communication is done via proxy and FQDN is not known.
-
-**[5]:** If different than `server.port` and if `server.nat.address` is set.
+**[4]:** If different than `server.port` and if `server.nat.address` is set.
 
 `rpc.system` has the following list of well-known values. If one of them applies, then the respective value MUST be used, otherwise a custom value MAY be used.
 
@@ -119,8 +117,8 @@ Generally, a user SHOULD NOT set `peer.service` to a fully qualified RPC service
 <!-- semconv rpc.server -->
 | Attribute  | Type | Description  | Examples  | Requirement Level |
 |---|---|---|---|---|
-| [`client.address`](span-general.md) | string | Client FQDN, unix domain socket, IPv4 or IPv6 address. | `/tmp/my.sock`; `127.0.0.1` | Recommended |
-| [`client.port`](span-general.md) | int | Client port number | `35555` | Recommended |
+| [`client.address`](span-general.md) | string | Immediate client address - unix domain socket name, IPv4 or IPv6 address. | `/tmp/my.sock`; `127.0.0.1` | Recommended |
+| [`client.port`](span-general.md) | int | Immediate client port number | `35555` | Recommended |
 <!-- endsemconv -->
 
 ### Events

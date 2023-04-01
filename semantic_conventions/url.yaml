@@ -24,6 +24,6 @@ groups:
         brief: 'The URI path'
         examples: ['/search']
       - id: query
-        type: string      
+        type: string
         brief: 'The URI query'
         examples: ["?q=OpenTelemetry#SemConv"]

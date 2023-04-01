@@ -46,11 +46,9 @@ the `client.*` and `server.*` properties are the same on the client and server.
 |---|---|---|---|---|
 | `server.address` | string | Server hostname, can represent FQDN. If no available, matches socket or IP address | `example.com` | Recommended |
 | `server.port` | int | Server port number | `80`; `8080`; `443` | Recommended |
-| `server.nat.address` | string | Proxy server FQDN. If not known, IP address should be used. | `proxy.example.com` | Recommended: [1] |
-| `server.nat.ip` | string | Proxy IP address | `127.0.0.1` | Recommended |
+| `server.nat.address` | string | Proxy server FQDN. If not known, IP address should be used. | `proxy.example.com` | Recommended: If communication is done via proxy. |
+| `server.nat.ip` | string | Proxy IP address. | `127.0.0.1` | Recommended: Only if different than `server.nat.address`. |
 | `server.nat.port` | int | Proxy port. | `16456` | Recommended |
-
-**[1]:** If communication is done via proxy and FQDN is not known.
 <!-- endsemconv -->
 
 ### Client attributes
@@ -58,8 +56,8 @@ the `client.*` and `server.*` properties are the same on the client and server.
 <!-- semconv client -->
 | Attribute  | Type | Description  | Examples  | Requirement Level |
 |---|---|---|---|---|
-| `client.address` | string | Client FQDN, unix domain socket, IPv4 or IPv6 address. | `/tmp/my.sock`; `127.0.0.1` | Recommended |
-| `client.port` | int | Client port number | `35555` | Recommended |
+| `client.address` | string | Immediate client address - unix domain socket name, IPv4 or IPv6 address. | `/tmp/my.sock`; `127.0.0.1` | Recommended |
+| `client.port` | int | Immediate client port number | `35555` | Recommended |
 <!-- endsemconv -->
 
 ### Common network attributes

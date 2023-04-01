@@ -198,7 +198,7 @@ The following operations related to messages are defined for these semantic conv
 | [`network.type`](span-general.md) | string | Protocol [address family](https://man7.org/linux/man-pages/man7/address_families.7.html) which is used for communication. | `inet6`; `bluetooth` | Conditionally Required: [9] |
 | [`server.address`](span-general.md) | string | Server hostname, can represent FQDN. If no available, matches socket or IP address [10] | `example.com` | Conditionally Required: If available. |
 | [`server.nat.address`](span-general.md) | string | Proxy server FQDN. If not known, IP address should be used. | `proxy.example.com` | Recommended: If different than `server.address`. |
-| [`server.nat.ip`](span-general.md) | string | Proxy IP address | `127.0.0.1` | Recommended: If different than `server.nat.address`. |
+| [`server.nat.ip`](span-general.md) | string | Proxy IP address. | `127.0.0.1` | Recommended: If different than `server.nat.address`. |
 | [`server.nat.port`](span-general.md) | int | Proxy port. | `16456` | Recommended |
 
 **[1]:** If a custom value is used, it MUST be of low cardinality.

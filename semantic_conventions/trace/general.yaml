@@ -28,7 +28,7 @@ groups:
       - id: sock.peer.addr
         type: string
         stability: deprecated
-        brief: > 
+        brief: >
           Deprecated. On client spans use `server.nat.address`, on server spans use `client.address`
         examples: ['192.168.0.1']
       - id: sock.peer.port
@@ -60,7 +60,7 @@ groups:
         type: int
         stability: deprecated
         brief: Deprecated, use `server.port` instead.
-        examples: [8080]        
+        examples: [8080]
       - id: sock.host.addr
         type: string
         stability: deprecated
@@ -151,13 +151,15 @@ groups:
         examples: [80, 8080, 443]
       - id: nat.address
         type: string
-        brief: Proxy server FQDN. If not known, IP address should be used. 
+        brief: Proxy server FQDN. If not known, IP address should be used.
         requirement_level:
-          recommended: If communication is done via proxy and FQDN is not known.
+          recommended: If communication is done via proxy.
         examples: proxy.example.com
       - id: nat.ip
         type: string
-        brief: Proxy IP address
+        brief: Proxy IP address.
+        requirement_level:
+          recommended: Only if different than `server.nat.address`.
         examples: ['127.0.0.1']
       - id: nat.port
         type: int
@@ -171,11 +173,11 @@ groups:
     attributes:
       - id: address
         type: string
-        brief: Client FQDN, unix domain socket, IPv4 or IPv6 address.
+        brief: Immediate client address - unix domain socket name, IPv4 or IPv6 address.
         examples: ['/tmp/my.sock', '127.0.0.1' ]
       - id: port
         type: int
-        brief: 'Client port number'
+        brief: 'Immediate client port number'
         examples: [35555]
 
   - id: network-connection

@@ -15,7 +15,7 @@ groups:
         brief: Deprecated, use the `error.message` attribute instead.
         type: string
         stability: deprecated
-        examples: ["Division by zero", "Can't convert 'int' object to str implicitly"]        
+        examples: ["Division by zero", "Can't convert 'int' object to str implicitly"]
       - id: stacktrace
         type: string
         brief: Deprecated, use the `error.stack_trace` attribute instead.

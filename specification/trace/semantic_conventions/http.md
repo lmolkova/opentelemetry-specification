@@ -72,16 +72,11 @@ sections below.
 | [`network.protocol.name`](span-general.md) | string | Application layer protocol used. The value SHOULD be normalized to lowercase. | `http`; `spdy` | Recommended: if not default (`http`). |
 | [`network.protocol.version`](span-general.md) | string | Version of the application layer protocol used. See note below. [1] | `1.0`; `1.1`; `2.0` | Recommended |
 | [`network.type`](span-general.md) | string | Protocol [address family](https://man7.org/linux/man-pages/man7/address_families.7.html) which is used for communication. | `inet`; `inet6` | Conditionally Required: [2] |
-| [`server.nat.address`](span-general.md) | string | Proxy server FQDN. If not known, IP address should be used. | `proxy.example.com` | Recommended: [3] |
-| [`server.nat.ip`](span-general.md) | string | Proxy IP address | `127.0.0.1` | Recommended |
-| [`server.nat.port`](span-general.md) | int | Proxy port. | `16456` | Recommended |
 | `user_agent.original` | string | Value of the [HTTP User-Agent](https://www.rfc-editor.org/rfc/rfc9110.html#field.user-agent) header sent by the client. | `CERN-LineMode/2.15 libwww/2.17b3` | Recommended |
 
 **[1]:** `network.protocol.version` refers to the version of the protocol used and might be different from the protocol client's version. If the HTTP client used has a version of `0.27.2`, but sends HTTP version `1.1`, this attribute should be set to `1.1`.
 
 **[2]:** If different than `inet` and if any of `server.nat.address` or `client.address` are set. Consumers of telemetry SHOULD accept both IPv4 and IPv6 formats for the address in `server.nat.address` and `client.address` if `network.type` is not set. This is to support instrumentations that follow previous versions of this document.
-
-**[3]:** If communication is done via proxy and FQDN is not known.
 
 Following attributes MUST be provided **at span creation time** (when provided at all), so they can be considered for sampling decisions:
 
@@ -129,6 +124,9 @@ before any HTTP-redirects that may happen when executing the request.
 |---|---|---|---|---|
 | `http.resend_count` | int | The ordinal number of request resending attempt (for any reason, including redirects). [1] | `3` | Recommended: if and only if request was retried. |
 | [`server.address`](span-general.md) | string | Host identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [2] | `example.com` | Required |
+| [`server.nat.address`](span-general.md) | string | Proxy server FQDN. If not known, IP address should be used. | `proxy.example.com` | Recommended: If communication is done via proxy. |
+| [`server.nat.ip`](span-general.md) | string | Proxy IP address. | `127.0.0.1` | Recommended: Only if different than `server.nat.address`. |
+| [`server.nat.port`](span-general.md) | int | Proxy port. | `16456` | Recommended |
 | [`server.port`](span-general.md) | int | Port identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [3] | `80`; `8080`; `443` | Conditionally Required: [4] |
 | `url.full` | string | Full HTTP request URL in the form `scheme://host[:port]/path?query[#fragment]`. Usually the fragment is not transmitted over HTTP, but if it is known, it should be included nevertheless. [5] | `https://www.foo.bar/search?q=OpenTelemetry#SemConv` | Required |
 
@@ -235,8 +233,10 @@ If the route cannot be determined, the `name` attribute MUST be set as defined i
 |---|---|---|---|---|
 | `http.route` | string | The matched route (path template in the format used by the respective server framework). See note below [1] | `/users/:userID?`; `{controller}/{action}/{id?}` | Conditionally Required: If and only if it's available |
 | `http.client_ip` | string | The IP address of the original client behind all proxies, if known (e.g. from [X-Forwarded-For](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For)). [2] | `83.164.160.102` | Recommended |
+| [`client.address`](span-general.md) | string | Immediate client address - unix domain socket name, IPv4 or IPv6 address. | `/tmp/my.sock`; `127.0.0.1` | Recommended |
+| [`client.port`](span-general.md) | int | Immediate client port number | `35555` | Recommended |
 | [`server.address`](span-general.md) | string | Name of the local HTTP server that received the request. [3] | `example.com` | Required |
-| [`server.nat.ip`](span-general.md) | string | Proxy IP address | `127.0.0.1` | Opt-In |
+| [`server.nat.ip`](span-general.md) | string | Proxy IP address. | `127.0.0.1` | Opt-In |
 | [`server.nat.port`](span-general.md) | int | Proxy port. | `16456` | Recommended |
 | [`server.port`](span-general.md) | int | Port of the local HTTP server that received the request. [4] | `80`; `8080`; `443` | Conditionally Required: [5] |
 | `url.path` | string | The request path component passed in a HTTP request line or equivalent. | `/users/12314` | Required |
