@@ -47,8 +47,8 @@ Some database systems may allow a connection to switch to a different `db.user`,
 | [`network.transport`](span-general.md) | string | Transport protocol used. See note below. | `ip_tcp` | Conditionally Required: [1] |
 | [`network.type`](span-general.md) | string | Protocol [address family](https://man7.org/linux/man-pages/man7/address_families.7.html) which is used for communication. | `inet6`; `bluetooth` | Conditionally Required: [2] |
 | [`server.address`](span-general.md) | string | Name of the database host. | `example.com` | Conditionally Required: See alternative attributes below. |
-| [`server.nat.address`](span-general.md) | string | Proxy server FQDN. If not known, IP address should be used. | `proxy.example.com` | Recommended: If different than `server.address`. |
-| [`server.nat.port`](span-general.md) | int | Proxy port. | `16456` | Recommended |
+| [`server.nat.address`](span-general.md) | string | Physical server address - hostname, IP, or unix domain socket name. | `proxy.example.com`; `10.5.3.2` | Recommended: If different than `server.address`. |
+| [`server.nat.port`](span-general.md) | int | Physical server port. | `16456` | Recommended |
 | [`server.port`](span-general.md) | int | Server port number | `80`; `8080`; `443` | Conditionally Required: [3] |
 
 **[1]:** If database type is in-process (`"inproc"`), recommended for other database types.

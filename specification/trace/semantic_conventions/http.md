@@ -124,11 +124,11 @@ before any HTTP-redirects that may happen when executing the request.
 |---|---|---|---|---|
 | `http.resend_count` | int | The ordinal number of request resending attempt (for any reason, including redirects). [1] | `3` | Recommended: if and only if request was retried. |
 | [`server.address`](span-general.md) | string | Host identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [2] | `example.com` | Required |
-| [`server.nat.address`](span-general.md) | string | Proxy server FQDN. If not known, IP address should be used. | `proxy.example.com` | Recommended: If communication is done via proxy. |
-| [`server.nat.ip`](span-general.md) | string | Proxy IP address. | `127.0.0.1` | Recommended: Only if different than `server.nat.address`. |
-| [`server.nat.port`](span-general.md) | int | Proxy port. | `16456` | Recommended |
-| [`server.port`](span-general.md) | int | Port identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [3] | `80`; `8080`; `443` | Conditionally Required: [4] |
-| `url.full` | string | Full HTTP request URL in the form `scheme://host[:port]/path?query[#fragment]`. Usually the fragment is not transmitted over HTTP, but if it is known, it should be included nevertheless. [5] | `https://www.foo.bar/search?q=OpenTelemetry#SemConv` | Required |
+| [`server.nat.address`](span-general.md) | string | Physical server address - hostname, IP, or unix domain socket name. [3] | `proxy.example.com`; `10.5.3.2` | Recommended: If different than `server.address` |
+| [`server.nat.ip`](span-general.md) | string | Physical server IP address. | `10.5.3.2` | Recommended: [4] |
+| [`server.nat.port`](span-general.md) | int | Physical server port. | `16456` | Recommended |
+| [`server.port`](span-general.md) | int | Port identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [5] | `80`; `8080`; `443` | Conditionally Required: [6] |
+| `url.full` | string | Full HTTP request URL in the form `scheme://host[:port]/path?query[#fragment]`. Usually the fragment is not transmitted over HTTP, but if it is known, it should be included nevertheless. [7] | `https://www.foo.bar/search?q=OpenTelemetry#SemConv` | Required |
 
 **[1]:** The resend count SHOULD be updated each time an HTTP request gets resent by the client, regardless of what was the cause of the resending (e.g. redirection, authorization failure, 503 Server Unavailable, network issues, or any other).
 
@@ -141,11 +141,15 @@ before any HTTP-redirects that may happen when executing the request.
 If an HTTP client request is explicitly made to an IP address, e.g. `http://x.x.x.x:8080`, then
 `server.address` SHOULD be the IP address `x.x.x.x`. A DNS lookup SHOULD NOT be used.
 
-**[3]:** When [request target](https://www.rfc-editor.org/rfc/rfc9110.html#target.resource) is absolute URI, `server.address` MUST match URI port identifier, otherwise it MUST match `Host` header port identifier.
+**[3]:** Address of the connected peer such as proxy FQDN, proxy IP address, or, if connected directly, an IP address of the server
 
-**[4]:** If not default (`80` for `http` scheme, `443` for `https`).
+**[4]:** Only on client side and if different than `server.nat.address`.
 
-**[5]:** `url.full` MUST NOT contain credentials passed via URL in form of `https://username:password@www.example.com/`. In such case the attribute's value should be `https://www.example.com/`.
+**[5]:** When [request target](https://www.rfc-editor.org/rfc/rfc9110.html#target.resource) is absolute URI, `server.address` MUST match URI port identifier, otherwise it MUST match `Host` header port identifier.
+
+**[6]:** If not default (`80` for `http` scheme, `443` for `https`).
+
+**[7]:** `url.full` MUST NOT contain credentials passed via URL in form of `https://username:password@www.example.com/`. In such case the attribute's value should be `https://www.example.com/`.
 
 Following attributes MUST be provided **at span creation time** (when provided at all), so they can be considered for sampling decisions:
 
@@ -236,8 +240,8 @@ If the route cannot be determined, the `name` attribute MUST be set as defined i
 | [`client.address`](span-general.md) | string | Immediate client address - unix domain socket name, IPv4 or IPv6 address. | `/tmp/my.sock`; `127.0.0.1` | Recommended |
 | [`client.port`](span-general.md) | int | Immediate client port number | `35555` | Recommended |
 | [`server.address`](span-general.md) | string | Name of the local HTTP server that received the request. [3] | `example.com` | Required |
-| [`server.nat.ip`](span-general.md) | string | Proxy IP address. | `127.0.0.1` | Opt-In |
-| [`server.nat.port`](span-general.md) | int | Proxy port. | `16456` | Recommended |
+| [`server.nat.address`](span-general.md) | string | Physical server address - hostname, IP, or unix domain socket name. | `proxy.example.com`; `10.5.3.2` | Opt-In |
+| [`server.nat.port`](span-general.md) | int | Physical server port. | `16456` | Recommended |
 | [`server.port`](span-general.md) | int | Port of the local HTTP server that received the request. [4] | `80`; `8080`; `443` | Conditionally Required: [5] |
 | `url.path` | string | The request path component passed in a HTTP request line or equivalent. | `/users/12314` | Required |
 | `url.query` | string | The query component passed in a HTTP request line or equivalent. | `?q=ddds` | Required |

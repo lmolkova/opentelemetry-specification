@@ -79,9 +79,10 @@ groups:
         note: >
           When [request target](https://www.rfc-editor.org/rfc/rfc9110.html#target.resource) is absolute URI, `server.address` MUST match
           URI port identifier, otherwise it MUST match `Host` header port identifier.
+      - ref: server.nat.address
+        note: Address of the connected peer such as proxy FQDN, proxy IP address, or, if connected directly, an IP address of the server
       - ref: server.nat.ip
       - ref: server.nat.port
-      - ref: server.nat.address
 
   - id: trace.http.server
     prefix: http
@@ -149,7 +150,7 @@ groups:
           - Port identifier of the [request target](https://www.rfc-editor.org/rfc/rfc9110.html#target.resource)
             if it's sent in absolute-form.
           - Port identifier of the `Host` header
-      - ref: server.nat.ip
+      - ref: server.nat.address
         requirement_level: opt_in
       - ref: server.nat.port
       - ref: client.address

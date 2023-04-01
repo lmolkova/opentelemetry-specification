@@ -44,11 +44,13 @@ the `client.*` and `server.*` properties are the same on the client and server.
 <!-- semconv server -->
 | Attribute  | Type | Description  | Examples  | Requirement Level |
 |---|---|---|---|---|
-| `server.address` | string | Server hostname, can represent FQDN. If no available, matches socket or IP address | `example.com` | Recommended |
+| `server.address` | string | Logical server hostname, can represent FQDN. If no available, matches socket or IP address | `example.com` | Recommended |
 | `server.port` | int | Server port number | `80`; `8080`; `443` | Recommended |
-| `server.nat.address` | string | Proxy server FQDN. If not known, IP address should be used. | `proxy.example.com` | Recommended: If communication is done via proxy. |
-| `server.nat.ip` | string | Proxy IP address. | `127.0.0.1` | Recommended: Only if different than `server.nat.address`. |
-| `server.nat.port` | int | Proxy port. | `16456` | Recommended |
+| `server.nat.address` | string | Physical server address - hostname, IP, or unix domain socket name. | `proxy.example.com`; `10.5.3.2` | Recommended: If different than `server.address` |
+| `server.nat.ip` | string | Physical server IP address. | `10.5.3.2` | Recommended: [1] |
+| `server.nat.port` | int | Physical server port. | `16456` | Recommended |
+
+**[1]:** Only on client side and if different than `server.nat.address`.
 <!-- endsemconv -->
 
 ### Client attributes

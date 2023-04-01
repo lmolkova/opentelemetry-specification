@@ -228,7 +228,7 @@ This metric is required.
 | [`network.protocol.name`](../../trace/semantic_conventions/span-general.md) | string | Application layer protocol used. The value SHOULD be normalized to lowercase. | `amqp`; `http`; `mqtt` | Recommended |
 | [`network.protocol.version`](../../trace/semantic_conventions/span-general.md) | string | Version of the application layer protocol used. See note below. [1] | `3.1.1` | Recommended |
 | [`server.address`](../../trace/semantic_conventions/span-general.md) | string | Host identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [2] | `example.com` | Required |
-| [`server.nat.address`](../../trace/semantic_conventions/span-general.md) | string | Proxy server FQDN. If not known, IP address should be used. | `proxy.example.com` | Recommended: If communication is done via proxy. |
+| [`server.nat.address`](../../trace/semantic_conventions/span-general.md) | string | Physical server address - hostname, IP, or unix domain socket name. | `proxy.example.com`; `10.5.3.2` | Recommended: If different than `server.address` |
 | [`server.port`](../../trace/semantic_conventions/span-general.md) | int | Port identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [3] | `80`; `8080`; `443` | Conditionally Required: [4] |
 
 **[1]:** `network.protocol.version` refers to the version of the protocol used and might be different from the protocol client's version. If the HTTP client used has a version of `0.27.2`, but sends HTTP version `1.1`, this attribute should be set to `1.1`.
@@ -264,7 +264,7 @@ This metric is optional.
 | [`network.protocol.name`](../../trace/semantic_conventions/span-general.md) | string | Application layer protocol used. The value SHOULD be normalized to lowercase. | `amqp`; `http`; `mqtt` | Recommended |
 | [`network.protocol.version`](../../trace/semantic_conventions/span-general.md) | string | Version of the application layer protocol used. See note below. [1] | `3.1.1` | Recommended |
 | [`server.address`](../../trace/semantic_conventions/span-general.md) | string | Host identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [2] | `example.com` | Required |
-| [`server.nat.address`](../../trace/semantic_conventions/span-general.md) | string | Proxy server FQDN. If not known, IP address should be used. | `proxy.example.com` | Recommended: If communication is done via proxy. |
+| [`server.nat.address`](../../trace/semantic_conventions/span-general.md) | string | Physical server address - hostname, IP, or unix domain socket name. | `proxy.example.com`; `10.5.3.2` | Recommended: If different than `server.address` |
 | [`server.port`](../../trace/semantic_conventions/span-general.md) | int | Port identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [3] | `80`; `8080`; `443` | Conditionally Required: [4] |
 
 **[1]:** `network.protocol.version` refers to the version of the protocol used and might be different from the protocol client's version. If the HTTP client used has a version of `0.27.2`, but sends HTTP version `1.1`, this attribute should be set to `1.1`.
@@ -300,7 +300,7 @@ This metric is optional.
 | [`network.protocol.name`](../../trace/semantic_conventions/span-general.md) | string | Application layer protocol used. The value SHOULD be normalized to lowercase. | `amqp`; `http`; `mqtt` | Recommended |
 | [`network.protocol.version`](../../trace/semantic_conventions/span-general.md) | string | Version of the application layer protocol used. See note below. [1] | `3.1.1` | Recommended |
 | [`server.address`](../../trace/semantic_conventions/span-general.md) | string | Host identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [2] | `example.com` | Required |
-| [`server.nat.address`](../../trace/semantic_conventions/span-general.md) | string | Proxy server FQDN. If not known, IP address should be used. | `proxy.example.com` | Recommended: If communication is done via proxy. |
+| [`server.nat.address`](../../trace/semantic_conventions/span-general.md) | string | Physical server address - hostname, IP, or unix domain socket name. | `proxy.example.com`; `10.5.3.2` | Recommended: If different than `server.address` |
 | [`server.port`](../../trace/semantic_conventions/span-general.md) | int | Port identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [3] | `80`; `8080`; `443` | Conditionally Required: [4] |
 
 **[1]:** `network.protocol.version` refers to the version of the protocol used and might be different from the protocol client's version. If the HTTP client used has a version of `0.27.2`, but sends HTTP version `1.1`, this attribute should be set to `1.1`.

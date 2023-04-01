@@ -68,9 +68,9 @@ Examples of span names:
 | [`network.transport`](span-general.md) | string | Transport protocol used. See note below. | `ip_tcp` | Conditionally Required: See below |
 | [`network.type`](span-general.md) | string | Protocol [address family](https://man7.org/linux/man-pages/man7/address_families.7.html) which is used for communication. | `inet6`; `bluetooth` | Conditionally Required: If and only if `server.nat.address` is set. |
 | [`server.address`](span-general.md) | string | RPC server [host name](https://grpc.github.io/grpc/core/md_doc_naming.html). [3] | `example.com` | Required |
-| [`server.nat.address`](span-general.md) | string | Proxy server FQDN. If not known, IP address should be used. | `proxy.example.com` | Recommended: If communication is done via proxy. |
-| [`server.nat.ip`](span-general.md) | string | Proxy IP address. | `127.0.0.1` | Recommended: If address is known to be an IP address. |
-| [`server.nat.port`](span-general.md) | int | Proxy port. | `16456` | Recommended: [4] |
+| [`server.nat.address`](span-general.md) | string | Physical server address - hostname, IP, or unix domain socket name. | `proxy.example.com`; `10.5.3.2` | Recommended: If different than `server.address` |
+| [`server.nat.ip`](span-general.md) | string | Physical server IP address. | `10.5.3.2` | Recommended: If address is known to be an IP address. |
+| [`server.nat.port`](span-general.md) | int | Physical server port. | `16456` | Recommended: [4] |
 | [`server.port`](span-general.md) | int | Server port number | `80`; `8080`; `443` | Conditionally Required: See below |
 
 **[1]:** This is the logical name of the service from the RPC interface perspective, which can be different from the name of any implementing class. The `code.namespace` attribute may be used to store the latter (despite the attribute name, it may include a class name; e.g., class with method actually executing the call on the server side, RPC client stub class on the client side).
