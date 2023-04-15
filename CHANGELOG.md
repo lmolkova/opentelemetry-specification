@@ -41,6 +41,15 @@ release.
   ([#3388](https://github.com/open-telemetry/opentelemetry-specification/pull/3388))
 - Change http.server.duration and http.client.duration units to seconds
   ([#3390](https://github.com/open-telemetry/opentelemetry-specification/pull/3390))
+- Rename `net.peer.*`, `net.host.*`, and `net.sock.*` attributes to align with ECS
+  ([#TODO](https://github.com/open-telemetry/opentelemetry-specification/pull/TODO))
+    BREAKING: rename `net.peer.name` and `net.host.name` to `server.address`,
+     `net.peer.port` and `net.host.port` to `server.port`,
+     `net.sock.peer.addr` to `server.socket.address` on client side and to `client.socket.address` on server side,
+     `net.sock.peer.port` to `server.socket.port` on client side and to `client.socket.port` on server side,
+     `net.sock.peer.name` to `server.socket.domain`,
+     `net.sock.host.addr` to `server.socket.address`,
+     `net.sock.host.port` to `server.socket.port`
 
 ### Compatibility
 
