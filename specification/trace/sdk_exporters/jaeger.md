@@ -52,9 +52,9 @@ OpenTelemetry resources MUST be mapped to Jaeger's `Span.Process` tags. Multiple
 single process and exporters need to handle this case accordingly.
 
 Critically, Jaeger backend depends on `Span.Process.ServiceName` to identify the service
-that produced the spans. That field MUST be populated from the `service.name` attribute
+that produced the spans. That field MUST be populated from the [`service.name`](/specification/resource/semantic_conventions/README.md#servicename) attribute
 of the [`service` resource](../../resource/semantic_conventions/README.md#service).
-If no `service.name` is contained in a Span's Resource, that field MUST be populated from the
+If no [`service.name`](/specification/resource/semantic_conventions/README.md#servicename) is contained in a Span's Resource, that field MUST be populated from the
 [default](../../resource/sdk.md#sdk-provided-resource-attributes) `Resource`.
 
 ### IDs

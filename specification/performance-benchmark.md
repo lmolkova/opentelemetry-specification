@@ -15,8 +15,8 @@ platform.
 - Default Span [Kind](./trace/api.md#spankind) and
   [Status](./trace/api.md#set-status).
 - Associated to a [resource](overview.md#resources) with attributes
-  `service.name`, `service.version` and 10 characters string value for each
-  attribute, and attribute `service.instance.id` with a unique UUID. See
+  [`service.name`](/specification/resource/semantic_conventions/README.md#servicename), [`service.version`](/specification/resource/semantic_conventions/README.md#serviceersion) and 10 characters string value for each
+  attribute, and attribute [service.instance.id`](/specification/resource/semantic_conventions/README.md#serviceversion) with a unique UUID. See
   [Service](./resource/semantic_conventions/README.md#service) for details.
 - 1 [attribute](./common/README.md#attribute) with a signed 64-bit integer
   value.

@@ -19,7 +19,7 @@
 | Dyno metadata environment variable | Resource attribute                  |
 |------------------------------------|-------------------------------------|
 | `HEROKU_APP_ID`                    | `heroku.app.id`                     |
-| `HEROKU_APP_NAME`                  | `service.name`                      |
+| `HEROKU_APP_NAME`                  | [`service.name`](/specification/resource/semantic_conventions/README.md#servicename) |
 | `HEROKU_DYNO_ID`                   | `service.instance.id`               |
 | `HEROKU_RELEASE_CREATED_AT`        | `heroku.release.creation_timestamp` |
 | `HEROKU_RELEASE_VERSION`           | `service.version`                   |

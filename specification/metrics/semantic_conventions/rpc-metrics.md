@@ -73,8 +73,8 @@ measurements.
 | [`rpc.method`](../../trace/semantic_conventions/rpc.md) | string | The name of the (logical) method being called, must be equal to the $method part in the span name. [2] | `exampleMethod` | Recommended |
 | [`net.sock.family`](../../trace/semantic_conventions/span-general.md) | string | Protocol [address family](https://man7.org/linux/man-pages/man7/address_families.7.html) which is used for communication. | `inet6`; `bluetooth` | Conditionally Required: If and only if `server.socket.address` is set. |
 | [`net.transport`](../../trace/semantic_conventions/span-general.md) | string | Transport protocol used. See note below. | `ip_tcp` | Conditionally Required: See below |
-| [`server.address`](../../trace/semantic_conventions/span-general.md) | string | RPC server [host name](https://grpc.github.io/grpc/core/md_doc_naming.html). [3] | `example.com` | Required |
-| [`server.port`](../../trace/semantic_conventions/span-general.md) | int | Server port number | `80`; `8080`; `443` | Conditionally Required: See below |
+| [`server.address`](/specification/common/attribute-registry.md#serveraddress| string | RPC server [host name](https://grpc.github.io/grpc/core/md_doc_naming.html). [3] | `example.com` | Required |
+| [`server.port`](/specification/common/attribute-registry.md#serverport)| int | Server port number | `80`; `8080`; `443` | Conditionally Required: See below |
 | [`server.socket.address`](../../trace/semantic_conventions/span-general.md) | string | Physical server IP address or Unix socket domain name.. | `10.5.3.2` | See below |
 | [`server.socket.domain`](../../trace/semantic_conventions/span-general.md) | string | The domain name of an immediate peer. [4] | `proxy.example.com`; `10.5.3.2` | Recommended: [5] |
 | [`server.socket.port`](../../trace/semantic_conventions/span-general.md) | int | Physical server port. | `16456` | Recommended: [6] |
@@ -120,7 +120,7 @@ Furthermore, setting [net.transport][] is required for non-IP connection like na
 ### Service name
 
 On the server process receiving and handling the remote procedure call, the service name provided in `rpc.service` does not necessarily have to match the [`service.name`][] resource attribute.
-One process can expose multiple RPC endpoints and thus have multiple RPC service names. From a deployment perspective, as expressed by the `service.*` resource attributes, it will be treated as one deployed service with one `service.name`.
+One process can expose multiple RPC endpoints and thus have multiple RPC service names. From a deployment perspective, as expressed by the `service.*` resource attributes, it will be treated as one deployed service with one [`service.name`](/specification/resource/semantic_conventions/README.md#servicename).
 
 [`service.name`]: ../../resource/semantic_conventions/README.md#service
 

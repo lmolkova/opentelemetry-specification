@@ -178,7 +178,7 @@ removed.
 
 When scraping a Prometheus endpoint, resource attributes MUST be added to the
 scraped metrics to distinguish them from metrics from other Prometheus
-endpoints. In particular, `service.name` and `service.instance.id`, are needed
+endpoints. In particular, [`service.name`](/specification/resource/semantic_conventions/README.md#servicename) and `service.instance.id`, are needed
 to ensure Prometheus exporters can disambiguate metrics using
 [`job` and `instance` labels](https://prometheus.io/docs/concepts/jobs_instances/#jobs-and-instances)
 as [described below](#resource-attributes-1).
@@ -188,7 +188,7 @@ attributes, and MUST NOT be added as metric attributes:
 
 | OTLP Resource Attribute | Description |
 | ----------------------- | ----------- |
-| `service.name` | The configured name of the service that the target belongs to |
+| [`service.name`](/specification/resource/semantic_conventions/README.md#servicename) | The configured name of the service that the target belongs to |
 | `service.instance.id` | A unique identifier of the target.  By default, it should be the `<host>:<port>` of the scraped URL |
 
 The following attributes SHOULD be associated with scraped metrics as resource
@@ -394,7 +394,7 @@ Prometheus endpoint) or pushed via Prometheus remote-write. In OTLP, the
 `service.name`, `service.namespace`, and `service.instance.id` triplet is
 [required to be unique](../resource/semantic_conventions/README.md#service),
 which makes them good candidates to use to construct `job` and `instance`. In
-the collector Prometheus exporters, the `service.name` and `service.namespace`
+the collector Prometheus exporters, the [`service.name`](/specification/resource/semantic_conventions/README.md#servicename) and `service.namespace`
 attributes MUST be combined as `<service.namespace>/<service.name>`, or
 `<service.name>` if namespace is empty, to form the `job` metric label.  The
 `service.instance.id` attribute, if present, MUST be converted to the
