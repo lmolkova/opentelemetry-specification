@@ -72,7 +72,7 @@ sections below.
 | [`net.protocol.name`](span-general.md) | string | Application layer protocol used. The value SHOULD be normalized to lowercase. | `http`; `spdy` | Recommended: if not default (`http`). |
 | [`net.protocol.version`](span-general.md) | string | Version of the application layer protocol used. See note below. [1] | `1.0`; `1.1`; `2.0` | Recommended |
 | [`net.sock.family`](span-general.md) | string | Protocol [address family](https://man7.org/linux/man-pages/man7/address_families.7.html) which is used for communication. | `inet`; `inet6` | Conditionally Required: [2] |
-| [`server.socket.address`](span-general.md) | string | Physical server IP address or Unix socket domain name.. | `10.5.3.2` | Recommended: Only if different than `server.address`. |
+| [`server.socket.address`](span-general.md) | string | Physical server IP address or Unix socket domain name.. | `10.5.3.2` | Recommended: Only if different than [`server.address`](/specification/common/attribute-registry.md#serveraddress). |
 | [`server.socket.domain`](span-general.md) | string | The domain name of an immediate peer. [3] | `proxy.example.com`; `10.5.3.2` | Recommended: [4] |
 | [`server.socket.port`](span-general.md) | int | Physical server port. | `16456` | Recommended |
 | `user_agent.original` | string | Value of the [HTTP User-Agent](https://www.rfc-editor.org/rfc/rfc9110.html#field.user-agent) header sent by the client. | `CERN-LineMode/2.15 libwww/2.17b3` | Recommended |
@@ -83,7 +83,7 @@ sections below.
 
 **[3]:** Usually represents a proxy or intermediary domain name.
 
-**[4]:** Only on client side and only if different than `server.address`
+**[4]:** Only on client side and only if different than [`server.address`](/specification/common/attribute-registry.md#serveraddress)
 
 Following attributes MUST be provided **at span creation time** (when provided at all), so they can be considered for sampling decisions:
 
@@ -98,7 +98,7 @@ Following attributes MUST be provided **at span creation time** (when provided a
 | `unix` | Unix domain socket path |
 <!-- endsemconv -->
 
-It is recommended to also use the general [socket-level attributes][] - `server.socket` when available,  `server.socket.domain`, `server.socket.address` and `server.socket.port` when don't match `server.address` and `server.port` (if [intermediary](https://www.rfc-editor.org/rfc/rfc9110.html#section-3.7) is detected).
+It is recommended to also use the general [socket-level attributes][] - `server.socket` when available,  `server.socket.domain`, `server.socket.address` and `server.socket.port` when don't match [`server.address`](/specification/common/attribute-registry.md#serveraddress) and `server.port` (if [intermediary](https://www.rfc-editor.org/rfc/rfc9110.html#section-3.7) is detected).
 
 [socket-level attributes]: span-general.md#server-attributes
 
@@ -136,7 +136,7 @@ For an HTTP client span, `SpanKind` MUST be `Client`.
 |---|---|---|---|---|
 | `http.url` | string | Full HTTP request URL in the form `scheme://host[:port]/path?query[#fragment]`. Usually the fragment is not transmitted over HTTP, but if it is known, it should be included nevertheless. [1] | `https://www.foo.bar/search?q=OpenTelemetry#SemConv` | Required |
 | `http.resend_count` | int | The ordinal number of request resending attempt (for any reason, including redirects). [2] | `3` | Recommended: if and only if request was retried. |
-| [`server.address`](span-general.md) | string | Host identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [3] | `example.com` | Required |
+| [[`server.address`](/specification/common/attribute-registry.md#serveraddress)](span-general.md) | string | Host identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [3] | `example.com` | Required |
 | [`server.port`](span-general.md) | int | Port identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [4] | `80`; `8080`; `443` | Conditionally Required: [5] |
 
 **[1]:** `http.url` MUST NOT contain credentials passed via URL in form of `https://username:password@www.example.com/`. In such case the attribute's value should be `https://www.example.com/`.
@@ -150,7 +150,7 @@ For an HTTP client span, `SpanKind` MUST be `Client`.
 - Host identifier of the `Host` header
 
 If an HTTP client request is explicitly made to an IP address, e.g. `http://x.x.x.x:8080`, then
-`server.address` SHOULD be the IP address `x.x.x.x`. A DNS lookup SHOULD NOT be used.
+[`server.address`](/specification/common/attribute-registry.md#serveraddress) SHOULD be the IP address `x.x.x.x`. A DNS lookup SHOULD NOT be used.
 
 **[4]:** When [request target](https://www.rfc-editor.org/rfc/rfc9110.html#target.resource) is absolute URI, `server.port` MUST match URI port identifier, otherwise it MUST match `Host` header port identifier.
 
@@ -159,11 +159,11 @@ If an HTTP client request is explicitly made to an IP address, e.g. `http://x.x.
 Following attributes MUST be provided **at span creation time** (when provided at all), so they can be considered for sampling decisions:
 
 * `http.url`
-* [`server.address`](span-general.md)
+* [[`server.address`](/specification/common/attribute-registry.md#serveraddress)](span-general.md)
 * [`server.port`](span-general.md)
 <!-- endsemconv -->
 
-Note that in some cases host and port identifiers in the `Host` header might be different from the `server.address` and `server.port`, in this case instrumentation MAY populate `Host` header on `http.request.header.host` attribute even if it's not enabled by user.
+Note that in some cases host and port identifiers in the `Host` header might be different from the [`server.address`](/specification/common/attribute-registry.md#serveraddress) and `server.port`, in this case instrumentation MAY populate `Host` header on `http.request.header.host` attribute even if it's not enabled by user.
 
 ### HTTP request retries and redirects
 
@@ -247,7 +247,7 @@ If the route cannot be determined, the `name` attribute MUST be set as defined i
 | [`client.socket.address`](span-general.md) | string | Immediate client address - unix domain socket name, IPv4 or IPv6 address. | `/tmp/my.sock`; `127.0.0.1` | Recommended |
 | [`client.socket.port`](span-general.md) | int | Immediate client port number | `35555` | Recommended |
 | `http.scheme` | string | The URI scheme identifying the used protocol. | `http`; `https` | Required |
-| [`server.address`](span-general.md) | string | Name of the local HTTP server that received the request. [3] | `example.com` | Required |
+| [[`server.address`](/specification/common/attribute-registry.md#serveraddress)](span-general.md) | string | Name of the local HTTP server that received the request. [3] | `example.com` | Required |
 | [`server.port`](span-general.md) | int | Port of the local HTTP server that received the request. [4] | `80`; `8080`; `443` | Conditionally Required: [5] |
 | [`server.socket.address`](span-general.md) | string | Physical server IP address or Unix socket domain name.. | `10.5.3.2` | Opt-In |
 
@@ -289,13 +289,13 @@ Following attributes MUST be provided **at span creation time** (when provided a
 
 * `http.target`
 * `http.scheme`
-* [`server.address`](span-general.md)
+* [[`server.address`](/specification/common/attribute-registry.md#serveraddress)](span-general.md)
 * [`server.port`](span-general.md)
 <!-- endsemconv -->
 
 `http.route` MUST be provided at span creation time if and only if it's already available. If it becomes available after span starts, instrumentation MUST populate it anytime before span ends.
 
-Note that in some cases host and port identifiers in the `Host` header might be different from the `server.address` and `server.port`, in this case instrumentation MAY populate `Host` header on `http.request.header.host` attribute even if it's not enabled by user.
+Note that in some cases host and port identifiers in the `Host` header might be different from the [`server.address`](/specification/common/attribute-registry.md#serveraddress) and `server.port`, in this case instrumentation MAY populate `Host` header on `http.request.header.host` attribute even if it's not enabled by user.
 
 ## Examples
 
@@ -310,7 +310,7 @@ Span name: `GET`
 | `http.method`        | `"GET"`                                                 |
 | `http.flavor`        | `"1.1"`                                                 |
 | `http.url`           | `"https://example.com:8080/webshop/articles/4?s=1"`     |
-| `server.address`     | `example.com`                                           |
+| [`server.address`](/specification/common/attribute-registry.md#serveraddress)     | `example.com`                                           |
 | `server.port`        | 8080                                           |
 | `server.socket.address` | `"192.0.2.5"`                                           |
 | `http.status_code`   | `200`                                                   |
@@ -324,7 +324,7 @@ Span name: `GET /webshop/articles/:article_id`.
 | `http.method`        | `"GET"`                                         |
 | `http.flavor`        | `"1.1"`                                         |
 | `http.target`        | `"/webshop/articles/4?s=1"`                     |
-| `server.address`     | `"example.com"`                                 |
+| [`server.address`](/specification/common/attribute-registry.md#serveraddress)     | `"example.com"`                                 |
 | `server.port`        | `8080`                                          |
 | `http.scheme`        | `"https"`                                       |
 | `http.route`         | `"/webshop/articles/:article_id"`               |

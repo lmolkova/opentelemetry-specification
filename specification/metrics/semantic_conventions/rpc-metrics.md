@@ -73,7 +73,7 @@ measurements.
 | [`rpc.method`](../../trace/semantic_conventions/rpc.md) | string | The name of the (logical) method being called, must be equal to the $method part in the span name. [2] | `exampleMethod` | Recommended |
 | [`net.sock.family`](../../trace/semantic_conventions/span-general.md) | string | Protocol [address family](https://man7.org/linux/man-pages/man7/address_families.7.html) which is used for communication. | `inet6`; `bluetooth` | Conditionally Required: If and only if `server.socket.address` is set. |
 | [`net.transport`](../../trace/semantic_conventions/span-general.md) | string | Transport protocol used. See note below. | `ip_tcp` | Conditionally Required: See below |
-| [`server.address`](/specification/common/attribute-registry.md#serveraddress| string | RPC server [host name](https://grpc.github.io/grpc/core/md_doc_naming.html). [3] | `example.com` | Required |
+| [[`server.address`](/specification/common/attribute-registry.md#serveraddress)](/specification/common/attribute-registry.md#serveraddress| string | RPC server [host name](https://grpc.github.io/grpc/core/md_doc_naming.html). [3] | `example.com` | Required |
 | [`server.port`](/specification/common/attribute-registry.md#serverport)| int | Server port number | `80`; `8080`; `443` | Conditionally Required: See below |
 | [`server.socket.address`](../../trace/semantic_conventions/span-general.md) | string | Physical server IP address or Unix socket domain name.. | `10.5.3.2` | See below |
 | [`server.socket.domain`](../../trace/semantic_conventions/span-general.md) | string | The domain name of an immediate peer. [4] | `proxy.example.com`; `10.5.3.2` | Recommended: [5] |
@@ -83,18 +83,18 @@ measurements.
 
 **[2]:** This is the logical name of the method from the RPC interface perspective, which can be different from the name of any implementing method/function. The `code.function` attribute may be used to store the latter (e.g., method actually executing the call on the server side, RPC client stub method on the client side).
 
-**[3]:** May contain server IP address, DNS name, or local socket name. When host component is an IP address, instrumentations SHOULD NOT do a reverse proxy lookup to obtain DNS name and SHOULD set `server.address` to the IP address provided in the host component.
+**[3]:** May contain server IP address, DNS name, or local socket name. When host component is an IP address, instrumentations SHOULD NOT do a reverse proxy lookup to obtain DNS name and SHOULD set [`server.address`](/specification/common/attribute-registry.md#serveraddress) to the IP address provided in the host component.
 
 **[4]:** Usually represents a proxy or intermediary domain name.
 
-**[5]:** If different than `server.address` and if `server.socket.address` is set.
+**[5]:** If different than [`server.address`](/specification/common/attribute-registry.md#serveraddress) and if `server.socket.address` is set.
 
 **[6]:** If different than `server.port` and if `server.socket.address` is set.
 
 **Additional attribute requirements:** At least one of the following sets of attributes is required:
 
 * [`server.socket.address`](../../trace/semantic_conventions/span-general.md)
-* [`server.address`](../../trace/semantic_conventions/span-general.md)
+* [[`server.address`](/specification/common/attribute-registry.md#serveraddress)](../../trace/semantic_conventions/span-general.md)
 
 `rpc.system` has the following list of well-known values. If one of them applies, then the respective value MUST be used, otherwise a custom value MAY be used.
 
@@ -107,9 +107,9 @@ measurements.
 | `connect_rpc` | Connect RPC |
 <!-- endsemconv -->
 
-To avoid high cardinality, implementations should prefer the most stable of `server.address` or
+To avoid high cardinality, implementations should prefer the most stable of [`server.address`](/specification/common/attribute-registry.md#serveraddress) or
 `server.socket.address`, depending on expected deployment profile.  For many cloud applications, this is likely
-`server.address` as names can be recycled even across re-instantiation of a server with a different `ip`.
+[`server.address`](/specification/common/attribute-registry.md#serveraddress) as names can be recycled even across re-instantiation of a server with a different `ip`.
 
 For client-side metrics `server.port` is required if the connection is IP-based and the port is available (it describes the server port they are connecting to).
 For server-side spans `server.port` is optional (it describes the port the client is connecting from).

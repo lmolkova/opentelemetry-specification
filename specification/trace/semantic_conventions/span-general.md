@@ -12,7 +12,7 @@ Particular operations may refer to or require some of these attributes.
 
 - [Server and client attributes](#server-and-client-attributes)
   * [Server attributes](#server-attributes)
-      - [`server.address`](#serveraddress)
+      - [[`server.address`](/specification/common/attribute-registry.md#serveraddress)](#serveraddress)
       - [`server.socket.*` attributes](#serversocket-attributes)
   * [Client attributes](#client-attributes)
     + [Connecting through intermediary](#connecting-through-intermediary)
@@ -47,37 +47,37 @@ if they do not cause breaking changes to HTTP semantic conventions.
 <!-- semconv server -->
 | Attribute  | Type | Description  | Examples  | Requirement Level |
 |---|---|---|---|---|
-| `server.address` | string | Logical server hostname, matches server FQDN if available, and IP or socket address if FQDN is not known. | `example.com` | Recommended |
+| [`server.address`](/specification/common/attribute-registry.md#serveraddress) | string | Logical server hostname, matches server FQDN if available, and IP or socket address if FQDN is not known. | `example.com` | Recommended |
 | `server.port` | int | Server port number | `80`; `8080`; `443` | Recommended |
 | `server.socket.domain` | string | The domain name of an immediate peer. [1] | `proxy.example.com`; `10.5.3.2` | Recommended: [2] |
-| `server.socket.address` | string | Physical server IP address or Unix socket domain name.. | `10.5.3.2` | Recommended: Only if different than `server.address`. |
+| `server.socket.address` | string | Physical server IP address or Unix socket domain name.. | `10.5.3.2` | Recommended: Only if different than [`server.address`](/specification/common/attribute-registry.md#serveraddress). |
 | `server.socket.port` | int | Physical server port. | `16456` | Recommended |
 
 **[1]:** Usually represents a proxy or intermediary domain name.
 
-**[2]:** Only on client side and only if different than `server.address`
+**[2]:** Only on client side and only if different than [`server.address`](/specification/common/attribute-registry.md#serveraddress)
 <!-- endsemconv -->
 
-`server.address` and `server.port` represent logical server name and port. Semantic conventions that refer to these attributes SHOULD
+[`server.address`](/specification/common/attribute-registry.md#serveraddress) and `server.port` represent logical server name and port. Semantic conventions that refer to these attributes SHOULD
 specify what these attributes mean in their context.
 
-Semantic conventions and instrumentations that populate both logical (`server.address` and `server.port`) and socket-level (`server.socket.*`) attributes SHOULD set socket-level attributes only when they don't match logical ones. For example, when direct connection to the remote destination is established and `server.address` is populated, `server.socket.address` SHOULD NOT be set. Check out [Connecting through intermediary](#connecting-through-intermediary) for more information.
+Semantic conventions and instrumentations that populate both logical ([`server.address`](/specification/common/attribute-registry.md#serveraddress) and `server.port`) and socket-level (`server.socket.*`) attributes SHOULD set socket-level attributes only when they don't match logical ones. For example, when direct connection to the remote destination is established and [`server.address`](/specification/common/attribute-registry.md#serveraddress) is populated, `server.socket.address` SHOULD NOT be set. Check out [Connecting through intermediary](#connecting-through-intermediary) for more information.
 
-#### `server.address`
+#### [`server.address`](/specification/common/attribute-registry.md#serveraddress)
 
 For IP-based communication, the name should be a DNS host name of the service. On client side it matches remote service name, on server side, it represents local service name as seen externally on clients.
 
-When connecting to an URL `https://example.com/foo`, `server.address` matches `"example.com"` on both client and server side.
+When connecting to an URL `https://example.com/foo`, [`server.address`](/specification/common/attribute-registry.md#serveraddress) matches `"example.com"` on both client and server side.
 
-On client side, it's usually passed in form of URL, connection string, host name, etc. Sometimes host name is only available to instrumentation as a string which may contain DNS name or IP address. `server.address` SHOULD be set to the available known hostname (e.g., `"127.0.0.1"` if connecting to an URL `https://127.0.0.1/foo`).
+On client side, it's usually passed in form of URL, connection string, host name, etc. Sometimes host name is only available to instrumentation as a string which may contain DNS name or IP address. [`server.address`](/specification/common/attribute-registry.md#serveraddress) SHOULD be set to the available known hostname (e.g., `"127.0.0.1"` if connecting to an URL `https://127.0.0.1/foo`).
 
-If only IP address is available, it should be populated on `server.socket.address` and `server.address` SHOULD NOT be set. Reverse DNS lookup SHOULD NOT be used to obtain DNS name.
+If only IP address is available, it should be populated on `server.socket.address` and [`server.address`](/specification/common/attribute-registry.md#serveraddress) SHOULD NOT be set. Reverse DNS lookup SHOULD NOT be used to obtain DNS name.
 
-If `net.transport` is `"pipe"`, the absolute path to the file representing it should be used as `server.address`.
+If `net.transport` is `"pipe"`, the absolute path to the file representing it should be used as [`server.address`](/specification/common/attribute-registry.md#serveraddress).
 If there is no such file (e.g., anonymous pipe),
 the name should explicitly be set to the empty string to distinguish it from the case where the name is just unknown or not covered by the instrumentation.
 
-For Unix domain socket, `server.address` attribute represents remote endpoint address on the client side and local endpoint address on the server side.
+For Unix domain socket, [`server.address`](/specification/common/attribute-registry.md#serveraddress) attribute represents remote endpoint address on the client side and local endpoint address on the server side.
 
 #### `server.socket.*` attributes
 
@@ -130,9 +130,9 @@ On client side it represents local socket address and port can be obtained by ca
 
 #### Connecting through intermediary
 
-When connecting to the remote destination through an intermediary (e.g. proxy), client instrumentations SHOULD set `server.address` and `server.port` to logical remote destination address and `server.socket.name`, `server.socket.address` and `server.socket.port` to the socket peer connection is established with - the intermediary.
+When connecting to the remote destination through an intermediary (e.g. proxy), client instrumentations SHOULD set [`server.address`](/specification/common/attribute-registry.md#serveraddress) and `server.port` to logical remote destination address and `server.socket.name`, `server.socket.address` and `server.socket.port` to the socket peer connection is established with - the intermediary.
 
-Server instrumentations that use `server.address` and `server.port` SHOULD set them to logical local host; If `server.socket.address` and `server.socket.port` are used, they SHOULD be set to the address of intermediary connection is established with.
+Server instrumentations that use [`server.address`](/specification/common/attribute-registry.md#serveraddress) and `server.port` SHOULD set them to logical local host; If `server.socket.address` and `server.socket.port` are used, they SHOULD be set to the address of intermediary connection is established with.
 Server semantic conventions SHOULD define additional attribute(s) representing originating peer address for reverse-proxy scenarios when such information is available.
 
 `server.socket.domain` SHOULD be set to the DNS name used to resolve `server.socket.address` if it's readily available. Instrumentations
@@ -267,7 +267,7 @@ Destination fields capture details about the receiver of a network exchange/pack
 | `lte_ca` | LTE CA |
 <!-- endsemconv -->
 
-For `Unix` and `pipe`, since the connection goes over the file system instead of being directly to a known peer, `server.address` is the only attribute that usually makes sense (see description of `server.address` below).
+For `Unix` and `pipe`, since the connection goes over the file system instead of being directly to a known peer, [`server.address`](/specification/common/attribute-registry.md#serveraddress) is the only attribute that usually makes sense (see description of [`server.address`](/specification/common/attribute-registry.md#serveraddress) below).
 
 ## General remote service attributes
 

@@ -46,7 +46,7 @@ Some database systems may allow a connection to switch to a different `db.user`,
 | `db.user` | string | Username for accessing the database. | `readonly_user`; `reporting_user` | Recommended |
 | [`net.sock.family`](span-general.md) | string | Protocol [address family](https://man7.org/linux/man-pages/man7/address_families.7.html) which is used for communication. | `inet6`; `bluetooth` | Conditionally Required: [1] |
 | [`net.transport`](span-general.md) | string | Transport protocol used. See note below. | `ip_tcp` | Conditionally Required: [2] |
-| [`server.address`](span-general.md) | string | Name of the database host. | `example.com` | Conditionally Required: See alternative attributes below. |
+| [[`server.address`](/specification/common/attribute-registry.md#serveraddress)](span-general.md) | string | Name of the database host. | `example.com` | Conditionally Required: See alternative attributes below. |
 | [`server.port`](span-general.md) | int | Server port number | `80`; `8080`; `443` | Conditionally Required: [3] |
 | [`server.socket.address`](span-general.md) | string | Physical server IP address or Unix socket domain name.. | `10.5.3.2` | See below |
 | [`server.socket.port`](span-general.md) | int | Physical server port. | `16456` | Recommended |
@@ -55,11 +55,11 @@ Some database systems may allow a connection to switch to a different `db.user`,
 
 **[2]:** If database type is in-process (`"inproc"`), recommended for other database types.
 
-**[3]:** If using a port other than the default port for this DBMS and if `server.address` is set.
+**[3]:** If using a port other than the default port for this DBMS and if [`server.address`](/specification/common/attribute-registry.md#serveraddress) is set.
 
 **Additional attribute requirements:** At least one of the following sets of attributes is required:
 
-* [`server.address`](span-general.md)
+* [[`server.address`](/specification/common/attribute-registry.md#serveraddress)](span-general.md)
 * [`server.socket.address`](span-general.md)
 
 `db.system` has the following list of well-known values. If one of them applies, then the respective value MUST be used, otherwise a custom value MAY be used.
@@ -278,7 +278,7 @@ In addition to Cosmos DB attributes, all spans include
 | `db.system`             | `"mysql"` |
 | `db.connection_string`  | `"Server=shopdb.example.com;Database=ShopDb;Uid=billing_user;TableCache=true;UseCompression=True;MinimumPoolSize=10;MaximumPoolSize=50;"` |
 | `db.user`               | `"billing_user"` |
-| `server.address`        | `"shopdb.example.com"` |
+| [`server.address`](/specification/common/attribute-registry.md#serveraddress)        | `"shopdb.example.com"` |
 | `server.socket.address` | `"192.0.2.12"` |
 | `server.port`           | `3306` |
 | `net.transport`     | `"IP.TCP"` |
@@ -289,7 +289,7 @@ In addition to Cosmos DB attributes, all spans include
 
 ### Redis
 
-In this example, Redis is connected using a unix domain socket and therefore the connection string and `server.address` are left out.
+In this example, Redis is connected using a unix domain socket and therefore the connection string and [`server.address`](/specification/common/attribute-registry.md#serveraddress) are left out.
 Furthermore, `db.name` is not specified as there is no database name in Redis and `db.redis.database_index` is set instead.
 
 | Key | Value |
@@ -313,7 +313,7 @@ Furthermore, `db.name` is not specified as there is no database name in Redis an
 | `db.system`             | `"mongodb"` |
 | `db.connection_string`  | not set |
 | `db.user`               | `"the_user"` |
-| `server.address`        | `"mongodb0.example.com"` |
+| [`server.address`](/specification/common/attribute-registry.md#serveraddress)        | `"mongodb0.example.com"` |
 | `server.socket.address` | `"192.0.2.14"` |
 | `server.port`           | `27017` |
 | `net.transport`     | `"IP.TCP"` |
@@ -332,7 +332,7 @@ Furthermore, `db.name` is not specified as there is no database name in Redis an
 | `db.system`                          | `"cosmosdb"` |
 | `db.name`                            | `"database name"` |
 | `db.operation`                       | `"ReadItemsAsync"` |
-| `server.address`                     |  `"account.documents.azure.com"`  |
+| [`server.address`](/specification/common/attribute-registry.md#serveraddress)                     |  `"account.documents.azure.com"`  |
 | `db.cosmosdb.client_id`              | `3ba4827d-4422-483f-b59f-85b74211c11d` |
 | `db.cosmosdb.operation_type`         | `Read` |
 | `user_agent.original`                | `cosmos-netstandard-sdk/3.23.0\|3.23.1\|1\|X64\|Linux 5.4.0-1098-azure 104 18\|.NET Core 3.1.32\|S\|` |

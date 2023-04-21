@@ -51,7 +51,7 @@ of `[ 0, 0.005, 0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1, 2.5, 5, 7.5, 
 | `http.status_code` | int | [HTTP response status code](https://tools.ietf.org/html/rfc7231#section-6). | `200` | Conditionally Required: If and only if one was received/sent. |
 | [`net.protocol.name`](../../trace/semantic_conventions/span-general.md) | string | Application layer protocol used. The value SHOULD be normalized to lowercase. | `amqp`; `http`; `mqtt` | Recommended |
 | [`net.protocol.version`](../../trace/semantic_conventions/span-general.md) | string | Version of the application layer protocol used. See note below. [2] | `3.1.1` | Recommended |
-| [`server.address`](/specification/common/attribute-registry.md#serveraddress) | string | Name of the local HTTP server that received the request. [3] | `example.com` | Required |
+| [[`server.address`](/specification/common/attribute-registry.md#serveraddress)](/specification/common/attribute-registry.md#serveraddress) | string | Name of the local HTTP server that received the request. [3] | `example.com` | Required |
 | [`server.port`](/specification/common/attribute-registry.md#serverport) | int | Port of the local HTTP server that received the request. [4] | `80`; `8080`; `443` | Conditionally Required: [5] |
 
 **[1]:** MUST NOT be populated when this is not supported by the HTTP server framework as the route attribute should have low-cardinality and the URI path can NOT substitute it.
@@ -94,7 +94,7 @@ This metric is optional.
 |---|---|---|---|---|
 | `http.method` | string | HTTP request method. | `GET`; `POST`; `HEAD` | Required |
 | `http.scheme` | string | The URI scheme identifying the used protocol. | `http`; `https` | Required |
-| [`server.address`](/specification/common/attribute-registry.md#serveraddress| string | Name of the local HTTP server that received the request. [1] | `example.com` | Required |
+| [[`server.address`](/specification/common/attribute-registry.md#serveraddress)](/specification/common/attribute-registry.md#serveraddress| string | Name of the local HTTP server that received the request. [1] | `example.com` | Required |
 | [`server.port`](/specification/common/attribute-registry.md#serverport)| int | Port of the local HTTP server that received the request. [2] | `80`; `8080`; `443` | Conditionally Required: [3] |
 
 **[1]:** Determined by using the first of the following that applies
@@ -136,7 +136,7 @@ This metric is optional.
 | `http.status_code` | int | [HTTP response status code](https://tools.ietf.org/html/rfc7231#section-6). | `200` | Conditionally Required: If and only if one was received/sent. |
 | [`net.protocol.name`](../../trace/semantic_conventions/span-general.md) | string | Application layer protocol used. The value SHOULD be normalized to lowercase. | `amqp`; `http`; `mqtt` | Recommended |
 | [`net.protocol.version`](../../trace/semantic_conventions/span-general.md) | string | Version of the application layer protocol used. See note below. [2] | `3.1.1` | Recommended |
-| [`server.address`](/specification/common/attribute-registry.md#serveraddress| string | Name of the local HTTP server that received the request. [3] | `example.com` | Required |
+| [[`server.address`](/specification/common/attribute-registry.md#serveraddress)](/specification/common/attribute-registry.md#serveraddress| string | Name of the local HTTP server that received the request. [3] | `example.com` | Required |
 | [`server.port`](/specification/common/attribute-registry.md#serverport)| int | Port of the local HTTP server that received the request. [4] | `80`; `8080`; `443` | Conditionally Required: [5] |
 
 **[1]:** MUST NOT be populated when this is not supported by the HTTP server framework as the route attribute should have low-cardinality and the URI path can NOT substitute it.
@@ -183,7 +183,7 @@ This metric is optional.
 | `http.status_code` | int | [HTTP response status code](https://tools.ietf.org/html/rfc7231#section-6). | `200` | Conditionally Required: If and only if one was received/sent. |
 | [`net.protocol.name`](../../trace/semantic_conventions/span-general.md) | string | Application layer protocol used. The value SHOULD be normalized to lowercase. | `amqp`; `http`; `mqtt` | Recommended |
 | [`net.protocol.version`](../../trace/semantic_conventions/span-general.md) | string | Version of the application layer protocol used. See note below. [2] | `3.1.1` | Recommended |
-| [`server.address`](/specification/common/attribute-registry.md#serveraddress| string | Name of the local HTTP server that received the request. [3] | `example.com` | Required |
+| [[`server.address`](/specification/common/attribute-registry.md#serveraddress)](/specification/common/attribute-registry.md#serveraddress| string | Name of the local HTTP server that received the request. [3] | `example.com` | Required |
 | [`server.port`](/specification/common/attribute-registry.md#serverport)| int | Port of the local HTTP server that received the request. [4] | `80`; `8080`; `443` | Conditionally Required: [5] |
 
 **[1]:** MUST NOT be populated when this is not supported by the HTTP server framework as the route attribute should have low-cardinality and the URI path can NOT substitute it.
@@ -234,9 +234,9 @@ of `[ 0, 0.005, 0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1, 2.5, 5, 7.5, 
 | `http.status_code` | int | [HTTP response status code](https://tools.ietf.org/html/rfc7231#section-6). | `200` | Conditionally Required: If and only if one was received/sent. |
 | [`net.protocol.name`](../../trace/semantic_conventions/span-general.md) | string | Application layer protocol used. The value SHOULD be normalized to lowercase. | `amqp`; `http`; `mqtt` | Recommended |
 | [`net.protocol.version`](../../trace/semantic_conventions/span-general.md) | string | Version of the application layer protocol used. See note below. [1] | `3.1.1` | Recommended |
-| [`server.address`](/specification/common/attribute-registry.md#serveraddress| string | Host identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [2] | `example.com` | Required |
+| [[`server.address`](/specification/common/attribute-registry.md#serveraddress)](/specification/common/attribute-registry.md#serveraddress| string | Host identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [2] | `example.com` | Required |
 | [`server.port`](/specification/common/attribute-registry.md#serverport)| int | Port identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [3] | `80`; `8080`; `443` | Conditionally Required: [4] |
-| [`server.socket.address`](../../trace/semantic_conventions/span-general.md) | string | Physical server IP address or Unix socket domain name.. | `10.5.3.2` | Recommended: Only if different than `server.address`. |
+| [`server.socket.address`](../../trace/semantic_conventions/span-general.md) | string | Physical server IP address or Unix socket domain name.. | `10.5.3.2` | Recommended: Only if different than [`server.address`](/specification/common/attribute-registry.md#serveraddress). |
 
 **[1]:** `net.protocol.version` refers to the version of the protocol used and might be different from the protocol client's version. If the HTTP client used has a version of `0.27.2`, but sends HTTP version `1.1`, this attribute should be set to `1.1`.
 
@@ -270,9 +270,9 @@ This metric is optional.
 | `http.status_code` | int | [HTTP response status code](https://tools.ietf.org/html/rfc7231#section-6). | `200` | Conditionally Required: If and only if one was received/sent. |
 | [`net.protocol.name`](../../trace/semantic_conventions/span-general.md) | string | Application layer protocol used. The value SHOULD be normalized to lowercase. | `amqp`; `http`; `mqtt` | Recommended |
 | [`net.protocol.version`](../../trace/semantic_conventions/span-general.md) | string | Version of the application layer protocol used. See note below. [1] | `3.1.1` | Recommended |
-| [`server.address`](/specification/common/attribute-registry.md#serveraddress| string | Host identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [2] | `example.com` | Required |
+| [[`server.address`](/specification/common/attribute-registry.md#serveraddress)](/specification/common/attribute-registry.md#serveraddress| string | Host identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [2] | `example.com` | Required |
 | [`server.port`](/specification/common/attribute-registry.md#serverport)| int | Port identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [3] | `80`; `8080`; `443` | Conditionally Required: [4] |
-| [`server.socket.address`](../../trace/semantic_conventions/span-general.md) | string | Physical server IP address or Unix socket domain name.. | `10.5.3.2` | Recommended: Only if different than `server.address`. |
+| [`server.socket.address`](../../trace/semantic_conventions/span-general.md) | string | Physical server IP address or Unix socket domain name.. | `10.5.3.2` | Recommended: Only if different than [`server.address`](/specification/common/attribute-registry.md#serveraddress). |
 
 **[1]:** `net.protocol.version` refers to the version of the protocol used and might be different from the protocol client's version. If the HTTP client used has a version of `0.27.2`, but sends HTTP version `1.1`, this attribute should be set to `1.1`.
 
@@ -306,9 +306,9 @@ This metric is optional.
 | `http.status_code` | int | [HTTP response status code](https://tools.ietf.org/html/rfc7231#section-6). | `200` | Conditionally Required: If and only if one was received/sent. |
 | [`net.protocol.name`](../../trace/semantic_conventions/span-general.md) | string | Application layer protocol used. The value SHOULD be normalized to lowercase. | `amqp`; `http`; `mqtt` | Recommended |
 | [`net.protocol.version`](../../trace/semantic_conventions/span-general.md) | string | Version of the application layer protocol used. See note below. [1] | `3.1.1` | Recommended |
-| [`server.address`](/specification/common/attribute-registry.md#serveraddress| string | Host identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [2] | `example.com` | Required |
+| [[`server.address`](/specification/common/attribute-registry.md#serveraddress)](/specification/common/attribute-registry.md#serveraddress| string | Host identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [2] | `example.com` | Required |
 | [`server.port`](/specification/common/attribute-registry.md#serverport)| int | Port identifier of the ["URI origin"](https://www.rfc-editor.org/rfc/rfc9110.html#name-uri-origin) HTTP request is sent to. [3] | `80`; `8080`; `443` | Conditionally Required: [4] |
-| [`server.socket.address`](../../trace/semantic_conventions/span-general.md) | string | Physical server IP address or Unix socket domain name.. | `10.5.3.2` | Recommended: Only if different than `server.address`. |
+| [`server.socket.address`](../../trace/semantic_conventions/span-general.md) | string | Physical server IP address or Unix socket domain name.. | `10.5.3.2` | Recommended: Only if different than [`server.address`](/specification/common/attribute-registry.md#serveraddress). |
 
 **[1]:** `net.protocol.version` refers to the version of the protocol used and might be different from the protocol client's version. If the HTTP client used has a version of `0.27.2`, but sends HTTP version `1.1`, this attribute should be set to `1.1`.
 

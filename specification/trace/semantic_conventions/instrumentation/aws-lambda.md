@@ -164,7 +164,7 @@ Function F:    | Span Function |
 | `faas.invocation_id` | | `79104EXAMPLEB723` |
 | `faas.trigger` | | `http` |
 | `cloud.account.id` | | `12345678912` |
-| `server.address` | `foo.execute-api.us-east-1.amazonaws.com` |  |
+| [`server.address`](/specification/common/attribute-registry.md#serveraddress) | `foo.execute-api.us-east-1.amazonaws.com` |  |
 | `server.port` | `413` |  |
 | `http.method` | `GET` | `GET` |
 | `http.user_agent` | `okhttp 3.0` | `okhttp 3.0` |

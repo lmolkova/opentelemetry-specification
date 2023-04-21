@@ -101,7 +101,7 @@ always available. The following table lists the possible attributes for
 |6|peer.address|Remote address defined in OpenTracing specification.|
 |7|db.name|Commonly used database name attribute for DB Spans.|
 
-* Ranking should control the selection order. For example, `server.address` (Rank
+* Ranking should control the selection order. For example, [`server.address`](/specification/common/attribute-registry.md#serveraddress) (Rank
   2) should be selected before `peer.address` (Rank 6).
 * `server.socket.domain` and `server.socket.address` can be used by themselves as `remoteEndpoint` but should be combined
   with `server.socket.addreportss` if it is also present.

@@ -67,7 +67,7 @@ Examples of span names:
 | `rpc.method` | string | The name of the (logical) method being called, must be equal to the $method part in the span name. [2] | `exampleMethod` | Recommended |
 | [`net.sock.family`](span-general.md) | string | Protocol [address family](https://man7.org/linux/man-pages/man7/address_families.7.html) which is used for communication. | `inet6`; `bluetooth` | Conditionally Required: If and only if `server.socket.address` is set. |
 | [`net.transport`](span-general.md) | string | Transport protocol used. See note below. | `ip_tcp` | Conditionally Required: See below |
-| [`server.address`](span-general.md) | string | RPC server [host name](https://grpc.github.io/grpc/core/md_doc_naming.html). [3] | `example.com` | Required |
+| [[`server.address`](/specification/common/attribute-registry.md#serveraddress)](span-general.md) | string | RPC server [host name](https://grpc.github.io/grpc/core/md_doc_naming.html). [3] | `example.com` | Required |
 | [`server.port`](span-general.md) | int | Server port number | `80`; `8080`; `443` | Conditionally Required: See below |
 | [`server.socket.address`](span-general.md) | string | Physical server IP address or Unix socket domain name.. | `10.5.3.2` | See below |
 | [`server.socket.domain`](span-general.md) | string | The domain name of an immediate peer. [4] | `proxy.example.com`; `10.5.3.2` | Recommended: [5] |
@@ -77,18 +77,18 @@ Examples of span names:
 
 **[2]:** This is the logical name of the method from the RPC interface perspective, which can be different from the name of any implementing method/function. The `code.function` attribute may be used to store the latter (e.g., method actually executing the call on the server side, RPC client stub method on the client side).
 
-**[3]:** May contain server IP address, DNS name, or local socket name. When host component is an IP address, instrumentations SHOULD NOT do a reverse proxy lookup to obtain DNS name and SHOULD set `server.address` to the IP address provided in the host component.
+**[3]:** May contain server IP address, DNS name, or local socket name. When host component is an IP address, instrumentations SHOULD NOT do a reverse proxy lookup to obtain DNS name and SHOULD set [`server.address`](/specification/common/attribute-registry.md#serveraddress) to the IP address provided in the host component.
 
 **[4]:** Usually represents a proxy or intermediary domain name.
 
-**[5]:** If different than `server.address` and if `server.socket.address` is set.
+**[5]:** If different than [`server.address`](/specification/common/attribute-registry.md#serveraddress) and if `server.socket.address` is set.
 
 **[6]:** If different than `server.port` and if `server.socket.address` is set.
 
 **Additional attribute requirements:** At least one of the following sets of attributes is required:
 
 * [`server.socket.address`](span-general.md)
-* [`server.address`](span-general.md)
+* [[`server.address`](/specification/common/attribute-registry.md#serveraddress)](span-general.md)
 
 `rpc.system` has the following list of well-known values. If one of them applies, then the respective value MUST be used, otherwise a custom value MAY be used.
 
@@ -127,7 +127,7 @@ Generally, a user SHOULD NOT set `peer.service` to a fully qualified RPC service
 | Attribute  | Type | Description  | Examples  | Requirement Level |
 |---|---|---|---|---|
 | [`net.sock.family`](span-general.md) | string | Protocol [address family](https://man7.org/linux/man-pages/man7/address_families.7.html) which is used for communication. | `inet6`; `bluetooth` | Conditionally Required: [1] |
-| [`server.address`](span-general.md) | string | Logical server hostname, matches server FQDN if available, and IP or socket address if FQDN is not known. | `example.com` | See below |
+| [[`server.address`](/specification/common/attribute-registry.md#serveraddress)](span-general.md) | string | Logical server hostname, matches server FQDN if available, and IP or socket address if FQDN is not known. | `example.com` | See below |
 | [`server.socket.address`](span-general.md) | string | Physical server IP address or Unix socket domain name.. | `10.5.3.2` | See below |
 | [`server.socket.port`](span-general.md) | int | Physical server port. | `16456` | Recommended |
 

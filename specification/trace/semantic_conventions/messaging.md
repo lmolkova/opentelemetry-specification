@@ -196,8 +196,8 @@ The following operations related to messages are defined for these semantic conv
 | [`net.protocol.name`](span-general.md) | string | Application layer protocol used. The value SHOULD be normalized to lowercase. | `amqp`; `mqtt` | Recommended |
 | [`net.protocol.version`](span-general.md) | string | Version of the application layer protocol used. See note below. [8] | `3.1.1` | Recommended |
 | [`net.sock.family`](span-general.md) | string | Protocol [address family](https://man7.org/linux/man-pages/man7/address_families.7.html) which is used for communication. | `inet6`; `bluetooth` | Conditionally Required: [9] |
-| [`server.address`](span-general.md) | string | Logical server hostname, matches server FQDN if available, and IP or socket address if FQDN is not known. [10] | `example.com` | Conditionally Required: If available. |
-| [`server.socket.address`](span-general.md) | string | Physical server IP address or Unix socket domain name.. | `10.5.3.2` | Recommended: Only if different than `server.address`. |
+| [[`server.address`](/specification/common/attribute-registry.md#serveraddress)](span-general.md) | string | Logical server hostname, matches server FQDN if available, and IP or socket address if FQDN is not known. [10] | `example.com` | Conditionally Required: If available. |
+| [`server.socket.address`](span-general.md) | string | Physical server IP address or Unix socket domain name.. | `10.5.3.2` | Recommended: Only if different than [`server.address`](/specification/common/attribute-registry.md#serveraddress). |
 | [`server.socket.domain`](span-general.md) | string | The domain name of an immediate peer. [11] | `proxy.example.com`; `10.5.3.2` | Recommended: [12] |
 | [`server.socket.port`](span-general.md) | int | Physical server port. | `16456` | Recommended |
 
@@ -223,7 +223,7 @@ The following operations related to messages are defined for these semantic conv
 
 **[11]:** Usually represents a proxy or intermediary domain name.
 
-**[12]:** If different than `server.address` and if `server.socket.address` is set.
+**[12]:** If different than [`server.address`](/specification/common/attribute-registry.md#serveraddress) and if `server.socket.address` is set.
 
 `messaging.operation` has the following list of well-known values. If one of them applies, then the respective value MUST be used, otherwise a custom value MAY be used.
 
@@ -438,7 +438,7 @@ Process CB:                 | Span CB1 |
 | Links |  |  |  |
 | SpanKind | `PRODUCER` | `CONSUMER` | `CONSUMER` |
 | Status | `Ok` | `Ok` | `Ok` |
-| `server.address` | `"ms"` | `"ms"` | `"ms"` |
+| [`server.address`](/specification/common/attribute-registry.md#serveraddress) | `"ms"` | `"ms"` | `"ms"` |
 | `server.port` | `1234` | `1234` | `1234` |
 | `messaging.system` | `"rabbitmq"` | `"rabbitmq"` | `"rabbitmq"` |
 | `messaging.destination.name` | `"T"` | | |
@@ -506,7 +506,7 @@ Process C:                      | Span Recv1 |
 | Links |  |  |  | Span Prod1 | Span Prod2 |
 | SpanKind | `PRODUCER` | `PRODUCER` | `CONSUMER` | `CONSUMER` | `CONSUMER` |
 | Status | `Ok` | `Ok` | `Ok` | `Ok` | `Ok` |
-| `server.address` | `"ms"` | `"ms"` | `"ms"` | `"ms"` | `"ms"` |
+| [`server.address`](/specification/common/attribute-registry.md#serveraddress) | `"ms"` | `"ms"` | `"ms"` | `"ms"` | `"ms"` |
 | `server.port` | `1234` | `1234` | `1234` | `1234` | `1234` |
 | `messaging.system` | `"rabbitmq"` | `"rabbitmq"` | `"rabbitmq"` | `"rabbitmq"` | `"rabbitmq"` |
 | `messaging.destination.name` | `"Q"` | `"Q"` | | | |
@@ -541,7 +541,7 @@ Process C:                              | Span Recv1 | Span Recv2 |
 |                 |  |  |  |  | Span Prod2: `messaging.message.id`: `"a2"`  |
 | SpanKind | `PRODUCER` | `PRODUCER` | `CONSUMER` | `CONSUMER` | `CONSUMER` |
 | Status | `Ok` | `Ok` | `Ok` | `Ok` | `Ok` |
-| `server.address` | `"ms"` | `"ms"` | `"ms"` | `"ms"` | `"ms"` |
+| [`server.address`](/specification/common/attribute-registry.md#serveraddress) | `"ms"` | `"ms"` | `"ms"` | `"ms"` | `"ms"` |
 | `server.port` | `1234` | `1234` | `1234` | `1234` | `1234` |
 | `messaging.system` | `"rabbitmq"` | `"rabbitmq"` | `"rabbitmq"` | `"rabbitmq"` | `"rabbitmq"` |
 | `messaging.destination.name` | `"Q"` | `"Q"` | | | |

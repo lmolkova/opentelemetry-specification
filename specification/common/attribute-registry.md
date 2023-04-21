@@ -45,7 +45,7 @@ Format 2:
 
 Pros: single place for basic, not signal-specific, not convention-specific information about attribute
 
-#### `server.address`
+#### [`server.address`](/specification/common/attribute-registry.md#serveraddress)
 
 Logical server hostname, matches server FQDN if available, and IP or socket address if FQDN is not known. 
 
@@ -72,7 +72,7 @@ Usually represents a proxy or intermediary domain name.
 
 #### `server.socket.address`
 
-Physical server IP address or Unix socket domain name. Should usually be set only when it's different than `server.address`
+Physical server IP address or Unix socket domain name. Should usually be set only when it's different than [`server.address`](/specification/common/attribute-registry.md#serveraddress)
 
 **Type**: string
 **Examples**: `10.5.3.2`
