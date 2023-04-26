@@ -918,8 +918,8 @@ should be determined by the implementer.
 | <a name="http.route">`http.route`</a> | string | The matched route (path template in the format used by the respective server framework). See note below [2] | `/users/:userID?`; `{controller}/{action}/{id?}` | ![Experimental](https://img.shields.io/badge/-experimental-blue)<br> |
 | <a name="http.scheme">`http.scheme`</a> | string | The URI scheme identifying the used protocol. | `http`; `https` | ![Experimental](https://img.shields.io/badge/-experimental-blue)<br> |
 | <a name="http.status_code">`http.status_code`</a> | int | [HTTP response status code](https://tools.ietf.org/html/rfc7231#section-6). | `200` | ![Experimental](https://img.shields.io/badge/-experimental-blue)<br> |
-| <a name="http.target">`http.target`</a> | string | The full request target as passed in a HTTP request line or equivalent. | `/users/12314/?q=ddds` | ![Experimental](https://img.shields.io/badge/-experimental-blue)<br> |
-| <a name="http.url">`http.url`</a> | string | Full HTTP request URL in the form `scheme://host[:port]/path?query[#fragment]`. Usually the fragment is not transmitted over HTTP, but if it is known, it should be included nevertheless. [3] | `https://www.foo.bar/search?q=OpenTelemetry#SemConv` | ![Experimental](https://img.shields.io/badge/-experimental-blue)<br> |
+| <a name="httptarget"></a>`http.target` | string | The full request target as passed in a HTTP request line or equivalent. | `/users/12314/?q=ddds` | ![Experimental](https://img.shields.io/badge/-experimental-blue)<br> |
+| <a name="httpurl">`http.url`</a> | string | Full HTTP request URL in the form `scheme://host[:port]/path?query[#fragment]`. Usually the fragment is not transmitted over HTTP, but if it is known, it should be included nevertheless. [3] | `https://www.foo.bar/search?q=OpenTelemetry#SemConv` | ![Experimental](https://img.shields.io/badge/-experimental-blue)<br> |
 
 **[1]:** The resend count SHOULD be updated each time an HTTP request gets resent by the client, regardless of what was the cause of the resending (e.g. redirection, authorization failure, 503 Server Unavailable, network issues, or any other).
 
