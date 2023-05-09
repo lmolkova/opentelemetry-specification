@@ -280,7 +280,7 @@ If the route cannot be determined, the `name` attribute MUST be set as defined i
 | [`server.socket.address`](span-general.md) | string | Local socket address. Useful in case of a multi-IP host. | `10.5.3.2` | Opt-In |
 | [`server.socket.port`](span-general.md) | int | Local socket port. Useful in case of a multi-port host. | `16456` | Opt-In |
 | [`url.path`](../../common/url.md) | string | The [URI path](https://www.rfc-editor.org/rfc/rfc3986#section-3.3) component [7] | `/search` | Required |
-| [`url.query`](../../common/url.md) | string | The [URI query](https://www.rfc-editor.org/rfc/rfc3986#section-3.4) component [8] | `q=OpenTelemetry` | Conditionally Required: if available. |
+| [`url.query`](../../common/url.md) | string | The [URI query](https://www.rfc-editor.org/rfc/rfc3986#section-3.4) component [8] | `q=OpenTelemetry` | Recommended |
 | [`url.scheme`](../../common/url.md) | string | The [URI scheme](https://www.rfc-editor.org/rfc/rfc3986#section-3.1) component identifying the used protocol. | `http`; `https` | Required |
 
 **[1]:** MUST NOT be populated when this is not supported by the HTTP server framework as the route attribute should have low-cardinality and the URI path can NOT substitute it.
@@ -334,7 +334,6 @@ As an example, if a browser request for `https://example.com:8080/webshop/articl
 
 Span name: `GET`
 
-<<<<<<< HEAD
 |   Attribute name     |                                       Value             |
 | :------------------- | :-------------------------------------------------------|
 | `http.request.method`| `"GET"`                                                 |
@@ -344,23 +343,11 @@ Span name: `GET`
 | `server.port`        | 8080                                                    |
 | `server.socket.address` | `"192.0.2.5"`                                        |
 | `http.response.status_code` | `200`                                            |
-=======
-|   Attribute name            |                                       Value             |
-| :-------------------------- | :-------------------------------------------------------|
-| `http.request.method`       | `"GET"`                                                 |
-| `net.protocol.version`      | `"1.1"`                                                 |
-| `url.full`                  | `"https://example.com:8080/webshop/articles/4?s=1"`     |
-| `net.peer.name`             | `"example.com"`                                         |
-| `net.peer.port`             | `8080`                                                  |
-| `net.sock.peer.addr`        | `"192.0.2.5"`                                           |
-| `http.response.status_code` | `200`                                                   |
->>>>>>> a1af2ba (more nits)
 
 The corresponding server Span may look like this:
 
 Span name: `GET /webshop/articles/:article_id`.
 
-<<<<<<< HEAD
 |   Attribute name     |                      Value                      |
 | :------------------- | :---------------------------------------------- |
 | `http.request.method`| `"GET"`                                         |
@@ -375,22 +362,6 @@ Span name: `GET /webshop/articles/:article_id`.
 | `client.address`     | `"192.0.2.4"`                                   |
 | `client.socket.address` | `"192.0.2.5"` (the client goes through a proxy) |
 | `user_agent.original` | `"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0"` |
-=======
-|   Attribute name            |                      Value                      |
-| :-------------------------- | :---------------------------------------------- |
-| `http.request.method`       | `"GET"`                                         |
-| `http.protocol.version`     | `"1.1"`                                         |
-| `url.path`                  | `"/webshop/articles/4"`                         |
-| `url.query`                 | `"?s=1"`                                        |
-| `net.host.name`             | `"example.com"`                                 |
-| `net.host.port`             | `8080`                                          |
-| `url.scheme`                | `"https"`                                       |
-| `http.route`                | `"/webshop/articles/:article_id"`               |
-| `http.response.status_code` | `200`                                           |
-| `http.client_ip`            | `"192.0.2.4"`                                   |
-| `net.sock.peer.addr`        | `"192.0.2.5"` (the client goes through a proxy) |
-| `user_agent.original`       | `"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0"`                               |
->>>>>>> a1af2ba (more nits)
 
 ### HTTP client retries examples
 
