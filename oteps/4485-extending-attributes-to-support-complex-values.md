@@ -147,7 +147,7 @@ The SDK MUST support reading and modifying complex attributes during processing.
 
 #### `AnyValue` implementation notes
 
-`AnyValue` implementation SHOULD provide efficient hash code and equality check
+`AnyValue` implementation SHOULD provide efficient hash code and deep equality check
 since its possible (but not recommended) to use complex attributes as a resource,
 instrumentation scope, or metric attribute where hash code and equality may be
 extensively used to identify tracer/meter/logger or the time series.
@@ -176,6 +176,9 @@ OTLP exporter SHOULD, by default, pass `AnyValue` attributes to the endpoint.
 Exporters for protocols that do not natively support complex values, such as Prometheus,
 SHOULD represent complex values as JSON-encoded strings following
 [attribute specification](/specification/common/README.md#attribute).
+
+When serializing `AnyValue` attributes to JSON, it is RECOMMENDED to sort map keys
+lexicographically and apply additional settings that enhance serialization stability.
 
 ### Semantic conventions
 
