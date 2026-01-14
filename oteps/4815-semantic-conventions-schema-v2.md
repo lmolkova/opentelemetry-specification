@@ -236,7 +236,17 @@ a machine-readable, discoverable, and evolvable telemetry schema to their users 
 Consumers that support Schema URL resolution can retrieve the resolved schema and use it for validation,
 documentation, transformation, or policy enforcement, regardless of the registry's origin.
 
-**Example manifest**
+**Example of registry_manifest.yaml**
+
+```yaml
+name: acme-semconv
+description: Acme Payments semantic conventions
+semconv_version: 1.0.0
+schema_base_url: https://github.com/acme/telemetry-schema/archive/refs/tags/
+# No dependency in this example.
+```
+
+**Example manifest for the resolved schema**
 
 ```yaml
 file_format: 2.0.0
@@ -244,7 +254,7 @@ name: acme-semconv
 description: Acme Payments semantic conventions
 version: 1.0.0
 stability: stable
-repository_url: https://github.com/acme/telemetry-schema
+registry_url: https://github.com/acme/telemetry-schema
 resolved_schema_url: https://github.com/acme/telemetry-schema/archive/refs/tags/schema-v1.0.0.yaml
 ```
 
@@ -268,7 +278,19 @@ Consumers do not need to be aware of individual source registries in order to pr
 This enables organizations to define company-, platform-, or product-specific conventions while remaining
 aligned with OpenTelemetry conventions and tooling.
 
-**Example manifest**
+**Example of registry_manifest.yaml**
+
+```yaml
+name: acme-platform
+description: Acme platform extensions to OpenTelemetry Semantic Conventions
+semconv_version: 1.4.0
+schema_base_url: https://github.com/acme/otel-semconv/archive/refs/tags/
+dependencies:
+  - name: open-telemetry
+    schema_url: https://opentelemetry.io/schemas/1.39.0
+```
+
+**Example manifest for the resolved schema**
 
 ```yaml
 file_format: 2.0.0
@@ -276,10 +298,7 @@ name: acme-platform
 description: Acme platform extensions to OpenTelemetry Semantic Conventions
 version: 1.4.0
 stability: stable
-repository_url: https://github.com/acme/otel-semconv
-dependencies:
-  - name: open-telemetry
-    schema_url: https://opentelemetry.io/schemas/1.39.0
+registry_url: https://github.com/acme/otel-semconv
 resolved_schema_url: https://github.com/acme/otel-semconv/archive/refs/tags/schema-v1.4.0.yaml
 ```
 
@@ -306,19 +325,16 @@ and other consumers.
 This approach enables stronger validation, clearer documentation, safer evolution, and more advanced processing
 of telemetry without increasing telemetry volume or requiring out-of-band metadata channels.
 
-**Example manifest**
+**Example of registry_manifest.yaml**
 
 ```yaml
-file_format: 2.0.0
 name: acme-checkout-service
 description: Telemetry schema for Acme Checkout Service
-version: 2.3.1
-stability: stable
-repository_url: https://github.com/acme/checkout-service
+semconv_version: 2.3.1
+schema_base_url: https://github.com/acme/checkout-service/archive/refs/tags/
 dependencies:
   - name: acme-platform
     schema_url: https://schemas.acme.com/platform/1.4.0
-resolved_schema_url: https://github.com/acme/checkout-service/archive/refs/tags/schema-v1.4.0.yaml
 ```
 
 **Example semconv schema (v2 definition schema)**
@@ -386,6 +402,18 @@ events:
         requirement_level: recommended
     entity_associations:
       - acme.cart
+```
+
+**Example manifest for the resolved schema**
+
+```yaml
+file_format: 2.0.0
+name: acme-checkout-service
+description: Telemetry schema for Acme Checkout Service
+version: 2.3.1
+stability: stable
+registry_url: https://github.com/acme/checkout-service
+resolved_schema_url: https://github.com/acme/checkout-service/archive/refs/tags/schema-v1.4.0.yaml
 ```
 
 In this scenario, the registry acts as a closed-world schema for the application. Only the entities, signals,
