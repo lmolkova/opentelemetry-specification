@@ -216,6 +216,31 @@ described above.
 > 
 > This document is provided as context only and may not reflect the latest manifest and schema details defined by this OTEP.
 
+This section refers to two different manifest files:
+
+- `registry_manifest.yaml` (definition manifest): A local file used by Weaver to interpret a registry
+  repository. It declares metadata, dependencies, and base URLs needed to resolve the registry.
+  This file aligns with the *definition schema* described earlier and is **not** published.
+- Publication manifest (Schema URL manifest): The file produced by registry resolution and packaging.
+  It uses `file_format: 2.0.0`, points to the resolved schema, and is the artifact served via the Schema URL.
+
+Weaver will provide `weaver registry package` to resolve dependencies and produce the publication artifacts.
+The command consumes `registry_manifest.yaml` and local semconv definitions, then outputs the resolved schema
+and the publication manifest.
+
+```
+Local registry repository
+  - registry_manifest.yaml (definition manifest)
+  - semconv definitions (attributes, entities, signals)
+  - dependencies (optional)
+            |
+            | weaver registry package
+            v
+Publication artifacts (Schema URL)
+  - manifest.yaml (publication manifest, file_format: 2.0.0)
+  - resolved-schema.yaml
+```
+
 This enables the following scenarios.
 
 #### Creating a semantic convention registry from scratch
@@ -236,7 +261,7 @@ a machine-readable, discoverable, and evolvable telemetry schema to their users 
 Consumers that support Schema URL resolution can retrieve the resolved schema and use it for validation,
 documentation, transformation, or policy enforcement, regardless of the registry's origin.
 
-**Example of registry_manifest.yaml**
+**Example of registry_manifest.yaml (definition manifest)**
 
 ```yaml
 name: acme-semconv
@@ -246,7 +271,7 @@ schema_base_url: https://github.com/acme/telemetry-schema/archive/refs/tags/
 # No dependency in this example.
 ```
 
-**Example manifest for the resolved schema**
+**Example publication manifest (Schema URL manifest)**
 
 ```yaml
 file_format: 2.0.0
@@ -278,7 +303,7 @@ Consumers do not need to be aware of individual source registries in order to pr
 This enables organizations to define company-, platform-, or product-specific conventions while remaining
 aligned with OpenTelemetry conventions and tooling.
 
-**Example of registry_manifest.yaml**
+**Example of registry_manifest.yaml (definition manifest)**
 
 ```yaml
 name: acme-platform
@@ -290,7 +315,7 @@ dependencies:
     schema_url: https://opentelemetry.io/schemas/1.39.0
 ```
 
-**Example manifest for the resolved schema**
+**Example publication manifest (Schema URL manifest)**
 
 ```yaml
 file_format: 2.0.0
@@ -325,7 +350,7 @@ and other consumers.
 This approach enables stronger validation, clearer documentation, safer evolution, and more advanced processing
 of telemetry without increasing telemetry volume or requiring out-of-band metadata channels.
 
-**Example of registry_manifest.yaml**
+**Example of registry_manifest.yaml (definition manifest)**
 
 ```yaml
 name: acme-checkout-service
@@ -404,7 +429,7 @@ events:
       - acme.cart
 ```
 
-**Example manifest for the resolved schema**
+**Example publication manifest (Schema URL manifest)**
 
 ```yaml
 file_format: 2.0.0
