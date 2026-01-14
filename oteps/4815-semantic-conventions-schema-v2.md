@@ -203,7 +203,196 @@ should specify a `-dev` Schema URL.
 
 ### Building and publishing arbitrary semantic convention registries
 
-TODO
+This proposal is not limited to the OpenTelemetry Semantic Conventions registry. It defines a general
+mechanism for authoring, resolving, publishing, and consuming *arbitrary* semantic convention registries.
+
+Any organization, project, or application MAY define its own semantic conventions, publish them as a
+versioned registry, and expose them via Schema URL using the same manifest and resolved schema formats
+described above.
+
+> [!NOTE]
+> Preliminary exploration of multi-registry authoring and resolution has been documented in the Weaver
+> project: https://github.com/open-telemetry/weaver/blob/main/docs/specs/multi-registry/multi_registry.md
+> 
+> This document is provided as context only and may not reflect the latest manifest and schema details defined by this OTEP.
+
+This enables the following scenarios.
+
+#### Creating a semantic convention registry from scratch
+
+A project MAY create a semantic convention registry independently, without taking a dependency on the
+OpenTelemetry registry.
+
+Such a registry:
+
+* MUST follow the semantic convention *definition* schema
+* MUST publish a manifest and resolved schema at a stable Schema URL
+* MAY define its own versioning and stability policy
+* MAY include entities, attributes, metrics, logs, and events specific to its domain
+
+This is intended for projects that operate outside the OpenTelemetry ecosystem but still want to provide
+a machine-readable, discoverable, and evolvable telemetry schema to their users and consumers.
+
+Consumers that support Schema URL resolution can retrieve the resolved schema and use it for validation,
+documentation, transformation, or policy enforcement, regardless of the registry's origin.
+
+**Example manifest**
+
+```yaml
+file_format: 2.0.0
+name: acme-semconv
+description: Acme Payments semantic conventions
+version: 1.0.0
+stability: stable
+repository_url: https://github.com/acme/telemetry-schema
+resolved_schema_url: https://github.com/acme/telemetry-schema/archive/refs/tags/schema-v1.0.0.yaml
+```
+
+This registry is fully self-contained. The resolved schema referenced by `resolved_schema_url` is
+produced by resolving only the definitions authored by the project.
+
+#### Extending an existing semantic convention registry
+
+A semantic convention registry MAY declare dependencies on one or more other registries, including the
+OpenTelemetry Semantic Conventions registry.
+
+In this case, the registry:
+
+* Reuses definitions from its dependencies via references
+* MAY refine, constrain, or specialize existing entities and signals
+* MAY add new conventions that build on top of existing ones
+
+The resolved schema MUST represent the fully merged and resolved view, including all transitive dependencies.
+Consumers do not need to be aware of individual source registries in order to process telemetry.
+
+This enables organizations to define company-, platform-, or product-specific conventions while remaining
+aligned with OpenTelemetry conventions and tooling.
+
+**Example manifest**
+
+```yaml
+file_format: 2.0.0
+name: acme-platform
+description: Acme platform extensions to OpenTelemetry Semantic Conventions
+version: 1.4.0
+stability: stable
+repository_url: https://github.com/acme/otel-semconv
+dependencies:
+  - name: open-telemetry
+    schema_url: https://opentelemetry.io/schemas/1.39.0
+resolved_schema_url: https://github.com/acme/otel-semconv/archive/refs/tags/schema-v1.4.0.yaml
+```
+
+In this example, the registry builds on top of OpenTelemetry Semantic Conventions and introduces
+additional entities and signals. The resolved schema exposed at `resolved_schema_url` contains the
+fully resolved result, including all referenced definitions from OpenTelemetry.
+
+#### Defining a telemetry schema for an application
+
+An application or service MAY publish a semantic convention registry that describes **exactly** the telemetry
+it produces.
+
+Such a registry can:
+
+* Declare a dependency on any Semantic Conventions (OpenTelemetry or other registries)
+* Restrict the set of entities, signals, and attributes that are considered valid
+* Define application-specific entities and signals
+* Encode stability, deprecation, and semantic annotations
+
+The resulting resolved schema serves as the authoritative description of the application’s telemetry contract.
+By publishing it via Schema URL, the application makes this contract discoverable to collectors, backends,
+and other consumers.
+
+This approach enables stronger validation, clearer documentation, safer evolution, and more advanced processing
+of telemetry without increasing telemetry volume or requiring out-of-band metadata channels.
+
+**Example manifest**
+
+```yaml
+file_format: 2.0.0
+name: acme-checkout-service
+description: Telemetry schema for Acme Checkout Service
+version: 2.3.1
+stability: stable
+repository_url: https://github.com/acme/checkout-service
+dependencies:
+  - name: acme-platform
+    schema_url: https://schemas.acme.com/platform/1.4.0
+resolved_schema_url: https://github.com/acme/checkout-service/archive/refs/tags/schema-v1.4.0.yaml
+```
+
+**Example semconv schema (v2 definition schema)**
+
+The example below defines a single service-specific metric and event, while reusing a minimal subset
+of conventions from dependent registries via imports. The import set is intentionally restrictive and
+covers only the groups required to describe the telemetry emitted by this service.
+
+```yaml
+# acme-checkout-service (SemConv schema v2)
+version: "2"
+
+imports:
+  entities:
+    - service                 # OTel service entity
+    - acme.platform.tenant    # acme-platform tenant entity
+  metrics:
+    - http.client.*           # OTel HTTP client metrics (for HTTP attribute set)
+  events:
+    - acme.platform.request   # acme-platform request event (for request id, etc.)
+
+attributes:
+  - key: acme.cart.id
+    type: string
+    stability: stable
+    brief: Opaque identifier of the shopping cart.
+
+entities:
+  - type: acme.cart
+    brief: A shopping cart instance.
+    stability: stable
+    identity:
+      - ref: acme.cart.id
+      - ref: acme.tenant.id
+    description:
+      - ref: service.name
+        requirement_level: recommended
+      - ref: service.instance.id
+        requirement_level: recommended
+
+metrics:
+  - name: acme.checkout.request.duration
+    brief: End-to-end latency of a checkout request.
+    unit: s
+    instrument: histogram
+    stability: stable
+    attributes:
+      - ref: http.request.method
+        requirement_level: required
+      - ref: http.response.status_code
+        requirement_level: required
+    entity_associations:
+      - acme.cart
+
+events:
+  - name: acme.cart.checkout.started
+    brief: Emitted when checkout starts for a cart.
+    stability: stable
+    attributes:
+      - ref: acme.cart.id
+        requirement_level: required
+      - ref: acme.tenant.id
+        requirement_level: required
+      - ref: acme.request.id
+        requirement_level: recommended
+    entity_associations:
+      - acme.cart
+```
+
+In this scenario, the registry acts as a closed-world schema for the application. Only the entities, signals,
+and attributes present in the resolved schema are considered valid for telemetry emitted by the service.
+Consumers can rely on this schema as a precise and versioned telemetry contract. Tooling such as Weaver
+live-check can use this schema to determine instrumentation coverage for the service by comparing emitted
+telemetry against the declared schema and identifying missing, incomplete, or non-conforming instrumentation.
 
 ## Trade-offs and mitigations
 
