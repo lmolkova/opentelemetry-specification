@@ -251,8 +251,8 @@ OpenTelemetry registry.
 Such a registry:
 
 * MUST follow the semantic convention *definition* schema
-* MUST publish a manifest and resolved schema at a stable Schema URL
-* MAY define its own versioning and stability policy
+* MAY publish a manifest and resolved schema
+* MAY define its own versioning, stability policy, naming, and other policies
 * MAY include entities, attributes, metrics, logs, and events specific to its domain
 
 This is intended for projects that operate outside the OpenTelemetry ecosystem but still want to provide
@@ -294,7 +294,7 @@ OpenTelemetry Semantic Conventions registry.
 In this case, the registry:
 
 * Reuses definitions from its dependencies via references
-* MAY refine, constrain, or specialize existing entities and signals
+* MAY refine existing attributes, entities, and signals
 * MAY add new conventions that build on top of existing ones
 
 The resolved schema MUST represent the fully merged and resolved view, including all transitive dependencies.
@@ -370,7 +370,7 @@ covers only the groups required to describe the telemetry emitted by this servic
 
 ```yaml
 # acme-checkout-service (SemConv schema v2)
-version: "2"
+version: "definition/2.0.0"
 
 imports:
   entities:
